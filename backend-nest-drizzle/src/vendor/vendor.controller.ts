@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body } from "@nestjs/common";
 import { VendorService } from "./vendor.service";
-import { createVendorRequest } from "./dto/create-vendor.request";
+import { createVendorRequest } from "./dto/vendor.request";
 
 @Controller("vendor")
 export class VendorController {
