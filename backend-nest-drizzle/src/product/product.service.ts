@@ -8,14 +8,18 @@ import * as schema from "src/database/schema/schema";
 export class ProductService {
   constructor(
     @Inject(DATABASE_CONNECTION)
-    private reandonly database: NodePgDatabase<typeof schema>,
-  ) { }
-  
-  async getAllVendorProducts() {
+    private readonly database: NodePgDatabase<typeof schema>,
+  ) {}
 
+  async getAllVendorProducts(vendorId: string) {
+    return this.database.query.product.findMany({
+      where: (product, { eq }) => eq(product.vendorId, vendorId),
+    });
   }
 
-  async createVendorProduct(vendorProductData: InferInsertModel<typeof schema.product) {
-    await this.database.insert(schama.valor).values(vendorData);
+  async createVendorProduct(
+    vendorProductData: InferInsertModel<typeof schema.product>,
+  ) {
+    await this.database.insert(schema.product).values(vendorProductData);
   }
 }
