@@ -17,7 +17,17 @@ export const LoginFormSchema = z.object({
 });
 
 export const RegisterFormSchema = z.object({
-	name: z.string().min(1, { message: 'Precisa ter 1 caractér no minímo' }),
+	companyName: z
+		.string()
+		.min(1, { message: 'Por favor digite o nome da sua empresa.' })
+		.max(50, { message: 'O nome da sua empresa deve ter no máximo 50 caracteres.' })
+		.trim(),
+	cnpj: z
+		.string()
+		.min(1, { message: 'Por favor digite o CNPJ da sua empresa.' })
+		.max(14, { message: 'O CNPJ deve ter 14 caracteres.' })
+		.regex(/^\d{14}$/, { message: 'O CNPJ deve conter apenas números.' })
+		.trim(),
 	email: z
 		.string()
 		.email({ message: 'Por favor digite um e-mail válido.' })
@@ -60,7 +70,8 @@ export type LoginFormState = {
 
 export type RegisterFormState = {
 	errors?: {
-		name?: string[];
+		companyName?: string[];
+		cnpj?: string[];
 		email?: string[];
 		password?: string[];
 		_form?: string[];
