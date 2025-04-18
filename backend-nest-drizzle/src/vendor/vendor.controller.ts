@@ -1,6 +1,13 @@
-import { Controller, Get, Post, Body } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+} from "@nestjs/common";
 import { VendorService } from "./vendor.service";
-import { createVendorRequest } from "./dto/vendor.request";
+import { VendorRequest } from "./dto/vendor.request";
 
 @Controller("vendor")
 export class VendorController {
@@ -11,8 +18,16 @@ export class VendorController {
     return this.vendorService.getAllVendors();
   }
 
-  @Post()
-  async createVendor(@Body() vendorData: createVendorRequest) {
-    return this.vendorService.createVendor(vendorData);
+  @Post("register")
+  @HttpCode(HttpStatus.CREATED)
+  async createVendor(@Body() vendorData: VendorRequest) {
+    return this.vendorService.registerVendor(vendorData);
+  }
+
+  @Post("login")
+  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.UNAUTHORIZED)
+  async vendorLogin(@Body() vendorData: VendorRequest) {
+    return this.vendorService.vendorLogin(vendorData);
   }
 }

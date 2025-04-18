@@ -24,7 +24,7 @@ export async function submitLogin(
 	}
 
 	try {
-		const result = await fetch('http://localhost:3001/login', {
+		const result = await fetch('http://localhost:3001/vendor/login', {
 			method: 'POST',
 			credentials: 'include',
 			headers: {

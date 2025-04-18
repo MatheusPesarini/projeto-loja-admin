@@ -3,12 +3,11 @@ import { isAuthenticated } from './lib/session/dal';
 
 const protectedRoutes = ['/dashboard'];
 const publicRoutes = [
-	{ path: '/', whenAuthenticated: 'allow' },
-	{ path: '/login', whenAuthenticated: 'redirect' },
+	{ path: '/', whenAuthenticated: 'redirect' },
 	{ path: '/register', whenAuthenticated: 'redirect' },
 ];
 
-const LOGIN_ROUTE = '/login';
+const LOGIN_ROUTE = '/';
 const DASHBOARD_ROUTE = '/dashboard';
 
 export async function middleware(request: NextRequest) {

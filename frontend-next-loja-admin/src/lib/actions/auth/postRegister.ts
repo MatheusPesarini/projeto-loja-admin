@@ -11,7 +11,8 @@ export async function submitRegister(
 	data: FormData,
 ): Promise<RegisterFormState> {
 	const validatedFields = RegisterFormSchema.safeParse({
-		name: data.get('name') as string,
+		companyName: data.get('companyName') as string,
+		cnpj: data.get('cnpj') as string,
 		email: data.get('email') as string,
 		password: data.get('password') as string,
 	});
@@ -25,7 +26,7 @@ export async function submitRegister(
 	}
 
 	try {
-		const result = await fetch('http://localhost:3001/register', {
+		const result = await fetch('http://localhost:3001/vendor/register', {
 			method: 'POST',
 			cache: 'no-cache',
 			headers: {
@@ -79,5 +80,5 @@ export async function submitRegister(
 		};
 	}
 
-	redirect('/login?registered=true');
+	redirect('/');
 }
