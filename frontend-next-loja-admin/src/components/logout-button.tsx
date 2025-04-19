@@ -2,6 +2,7 @@
 
 import { useAuth } from '@/context/AuthContext';
 import { submitLogout } from '@/lib/actions/auth/postLogout';
+import { LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function LogoutButton() {
@@ -19,8 +20,6 @@ export default function LogoutButton() {
 	};
 
 	return (
-		<button type="button" onClick={handleLogout}>
-			Logout
-		</button>
+		<LogOut type="button" onClick={handleLogout}/>
 	);
 }
