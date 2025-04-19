@@ -1,7 +1,7 @@
 'use client';
 
 import React from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { MoonIcon, SunIcon } from "lucide-react";
 
 export default function ThemeButton() {

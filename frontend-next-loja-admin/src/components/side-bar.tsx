@@ -18,9 +18,9 @@ import {
   SidebarProvider,
 } from './ui/sidebar';
 
-import LogoutButton from './logout-button';
+import LogoutButton from './sideBarComponents/logout-button';
 import Image from 'next/image';
-import ThemeButton from './theme-switch-button';
+import ThemeButton from './sideBarComponents/theme-switch-button';
 
 const data = {
   dashboard: {

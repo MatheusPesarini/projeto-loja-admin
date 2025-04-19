@@ -1,3 +1,6 @@
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+
 type FormInputProps = {
 	label: string;
 	name: string;
@@ -22,19 +25,18 @@ export default function FormInput({
 	const hasError = errors && errors.length > 0;
 
 	return (
-		<div className="mb-6 w-full max-w-xs">
+		<div className="grid gap-2">
 			{' '}
-			<label htmlFor={inputId} className="block text-sm font-medium mb-1 text-center">
+			<Label htmlFor={inputId}>
 				{label}
-			</label>
-			<input
+			</Label>
+			<Input
 				type={type}
 				name={name}
 				id={inputId}
 				placeholder={placeholder}
-				className={`text-black bg-amber-50 w-full p-2 rounded border ${
-					hasError ? 'border-red-500' : 'border-gray-300'
-				} ${className || ''}`}
+				className={`text-black bg-amber-50 w-full p-2 rounded border ${hasError ? 'border-red-500' : 'border-gray-300'
+					} ${className || ''}`}
 				aria-invalid={hasError ? 'true' : 'false'}
 				aria-describedby={hasError ? errorId : undefined}
 				{...rest}
