@@ -19,10 +19,11 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 
-const initialState = {
+const initialState: LoginFormState = {
 	errors: {},
 	message: '',
-} as LoginFormState;
+	success: false,
+};
 
 export default function LoginForm({
 	className,
@@ -126,7 +127,7 @@ export default function LoginForm({
 								className="mt-2 text-sm text-red-500 text-center"
 								aria-live="polite"
 							>
-								{state.message}
+								{/* {state.message} */}
 							</div>
 						)}
 						<Button

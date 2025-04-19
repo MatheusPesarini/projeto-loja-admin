@@ -2,9 +2,8 @@
 
 import { submitRegister } from '@/lib/actions/auth/postRegister';
 import { RegisterFormState } from '@/lib/actions/definitions';
-import { useActionState } from 'react';
+import React, { useActionState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/context/AuthContext';
 import {
   Card,
   CardContent,
@@ -18,27 +17,67 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 
-const initialState = {
+const initialState: RegisterFormState = {
   errors: {},
   message: '',
-} as RegisterFormState;
+  success: false,
+};
+
+const formatCNPJ = (value: string): string => {
+  if (!value) return '';
+  const cnpj = value.replace(/\D/g, '');
+
+  const limitedCNPJ = cnpj.slice(0, 14);
+  const len = limitedCNPJ.length;
+
+  if (len <= 2) {
+    return limitedCNPJ;
+  }
+  if (len <= 5) {
+    return `${limitedCNPJ.slice(0, 2)}.${limitedCNPJ.slice(2)}`;
+  }
+  if (len <= 8) {
+    return `${limitedCNPJ.slice(0, 2)}.${limitedCNPJ.slice(
+      2,
+      5,
+    )}.${limitedCNPJ.slice(5)}`;
+  }
+  if (len <= 12) {
+    return `${limitedCNPJ.slice(0, 2)}.${limitedCNPJ.slice(
+      2,
+      5,
+    )}.${limitedCNPJ.slice(5, 8)}/${limitedCNPJ.slice(8)}`;
+  }
+  return `${limitedCNPJ.slice(0, 2)}.${limitedCNPJ.slice(
+    2,
+    5,
+  )}.${limitedCNPJ.slice(5, 8)}/${limitedCNPJ.slice(
+    8,
+    12,
+  )}-${limitedCNPJ.slice(12)}`;
+}
 
 export default function RegisterForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'div'>) {
   const router = useRouter();
-  const { setIsAuthenticated } = useAuth();
   const [state, formAction, isPending] = useActionState(
     submitRegister,
     initialState,
   );
+
+  const [cnpjValue, setCNPJValue] = React.useState<string>('');
 
   const companyErrors = state?.errors?.companyName;
   const cnpjErrors = state?.errors?.cnpj;
   const emailErrors = state?.errors?.email;
   const passwordErrors = state?.errors?.password;
   const formErrors = state?.errors?._form;
+
+  const handleCNPJChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCNPJValue(formatCNPJ(event.target.value));
+  }
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
@@ -75,11 +114,15 @@ export default function RegisterForm({
               </div>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="cnpj">E-mail</Label>
+              <Label htmlFor="cnpj">CNPJ</Label>
               <Input
                 type="text"
                 id="cnpj"
                 name="cnpj"
+                value={cnpjValue}
+                onChange={handleCNPJChange}
+                placeholder="00.000.000/0001-00"
+                maxLength={18}
                 required
                 aria-describedby="cnpj-error"
                 className={cn(

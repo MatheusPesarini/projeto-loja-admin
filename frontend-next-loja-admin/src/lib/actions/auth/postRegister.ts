@@ -5,17 +5,30 @@ import {
 	type RegisterFormState,
 } from '@/lib/actions/definitions';
 import { redirect } from 'next/navigation';
+import { z } from 'zod';
 
 export async function submitRegister(
 	prevState: RegisterFormState | undefined,
 	data: FormData,
 ): Promise<RegisterFormState> {
-	const validatedFields = RegisterFormSchema.safeParse({
-		companyName: data.get('companyName') as string,
-		cnpj: data.get('cnpj') as string,
-		email: data.get('email') as string,
-		password: data.get('password') as string,
-	});
+  const rawFormData = {
+    companyName: data.get('companyName'),
+    cnpj: data.get('cnpj'),
+    email: data.get('email'),
+    password: data.get('password'),
+  };
+
+  let cleanedCnpj = '';
+	if (typeof rawFormData.cnpj === 'string') {
+		cleanedCnpj = rawFormData.cnpj.replace(/\D/g, '');
+	}
+
+  const dataToValidate = {
+    ...rawFormData,
+    cnpj: cleanedCnpj, 
+  };
+
+  const validatedFields = RegisterFormSchema.safeParse(dataToValidate);
 
 	if (!validatedFields.success) {
 		return {

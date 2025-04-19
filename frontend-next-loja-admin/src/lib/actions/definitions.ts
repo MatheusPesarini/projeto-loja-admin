@@ -28,7 +28,7 @@ export const RegisterFormSchema = z.object({
 		.string()
 		.min(1, { message: 'Por favor digite o CNPJ da sua empresa.' })
 		.max(14, { message: 'O CNPJ deve ter 14 caracteres.' })
-		.regex(/^\d{14}$/, { message: 'O CNPJ deve conter apenas números.' })
+		.regex(/^\d{14}$/, { message: 'O CNPJ deve conter 14 números.' })
 		.trim(),
 	email: z
 		.string()
