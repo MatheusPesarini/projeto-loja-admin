@@ -65,13 +65,18 @@ export async function submitLogin(
 				httpOnly: true,
 				secure: false,
 				path: '/',
-				maxAge: 60 * 60 * 24 * 7, 
-				sameSite: 'lax', 
+				maxAge: 60 * 60 * 24 * 7,
+				sameSite: 'lax',
 			});
 		} else {
-			console.error('Token não encontrado ou inválido na resposta da API:', responseData);
+			console.error(
+				'Token não encontrado ou inválido na resposta da API:',
+				responseData,
+			);
 			return {
-				errors: { _form: ['Resposta inválida do servidor. Token não encontrado.'] },
+				errors: {
+					_form: ['Resposta inválida do servidor. Token não encontrado.'],
+				},
 				message: 'Resposta inválida do servidor.',
 				success: false,
 			};

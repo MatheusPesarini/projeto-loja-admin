@@ -1,5 +1,5 @@
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
 
 type FormInputProps = {
 	label: string;
@@ -27,16 +27,15 @@ export default function FormInput({
 	return (
 		<div className="grid gap-2">
 			{' '}
-			<Label htmlFor={inputId}>
-				{label}
-			</Label>
+			<Label htmlFor={inputId}>{label}</Label>
 			<Input
 				type={type}
 				name={name}
 				id={inputId}
 				placeholder={placeholder}
-				className={`text-black bg-amber-50 w-full p-2 rounded border ${hasError ? 'border-red-500' : 'border-gray-300'
-					} ${className || ''}`}
+				className={`text-black bg-amber-50 w-full p-2 rounded border ${
+					hasError ? 'border-red-500' : 'border-gray-300'
+				} ${className || ''}`}
 				aria-invalid={hasError ? 'true' : 'false'}
 				aria-describedby={hasError ? errorId : undefined}
 				{...rest}

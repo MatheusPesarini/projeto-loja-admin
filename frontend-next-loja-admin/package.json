@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "format": "npx @biomejs/biome format ./src --max-diagnostics=1000 --write --indent-width=2 --indent-style=tab --javascript-formatter-quote-style=single"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.10",

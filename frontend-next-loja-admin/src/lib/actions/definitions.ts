@@ -20,7 +20,9 @@ export const RegisterFormSchema = z.object({
 	companyName: z
 		.string()
 		.min(1, { message: 'Por favor digite o nome da sua empresa.' })
-		.max(50, { message: 'O nome da sua empresa deve ter no máximo 50 caracteres.' })
+		.max(50, {
+			message: 'O nome da sua empresa deve ter no máximo 50 caracteres.',
+		})
 		.trim(),
 	cnpj: z
 		.string()
