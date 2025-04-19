@@ -4,6 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { submitLogout } from '@/lib/actions/auth/postLogout';
 import { LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { Button } from '../ui/button';
 
 export default function LogoutButton() {
 	const router = useRouter();
@@ -19,5 +20,10 @@ export default function LogoutButton() {
 		}
 	};
 
-	return <LogOut type="button" onClick={handleLogout} />;
+	return (
+		<Button className='w-auto p-0 cursor-pointer' onClick={handleLogout}>
+			<LogOut className="h-[1.2rem] w-[1.2rem]" />
+			<span className="sr-only">Alternar tema</span>
+		</Button>
+	)
 }
