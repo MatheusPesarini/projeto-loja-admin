@@ -7,7 +7,7 @@ import {
   HttpStatus,
 } from "@nestjs/common";
 import { VendorService } from "./vendor.service";
-import { VendorRequest } from "./dto/vendor.request";
+import { VendorLoginData, VendorRegisterData } from "./dto/vendor.request";
 
 @Controller("vendor")
 export class VendorController {
@@ -20,14 +20,14 @@ export class VendorController {
 
   @Post("register")
   @HttpCode(HttpStatus.CREATED)
-  async createVendor(@Body() vendorData: VendorRequest) {
+  async createVendor(@Body() vendorData: VendorRegisterData) {
     return this.vendorService.registerVendor(vendorData);
   }
 
   @Post("login")
   @HttpCode(HttpStatus.OK)
   @HttpCode(HttpStatus.UNAUTHORIZED)
-  async vendorLogin(@Body() vendorData: VendorRequest) {
+  async vendorLogin(@Body() vendorData: VendorLoginData) {
     return this.vendorService.vendorLogin(vendorData);
   }
 }

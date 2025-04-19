@@ -58,18 +58,26 @@ export async function submitLogin(
 
 		const responseData = await result.json();
 
-		const setCookieHeader = result.headers.get('set-cookie');
-		if (setCookieHeader) {
-			const [cookiePair] = setCookieHeader.split(';');
-			const [name, value] = cookiePair.split('=');
-			(await cookies()).set(name, value, {
+		const token = responseData.accessToken;
+
+		if (token && typeof token === 'string') {
+			(await cookies()).set('authToken', token, {
 				httpOnly: true,
 				secure: false,
 				path: '/',
-				maxAge: 60 * 60 * 24 * 7,
-				sameSite: 'lax',
+				maxAge: 60 * 60 * 24 * 7, 
+				sameSite: 'lax', 
 			});
+		} else {
+			console.error('Token não encontrado ou inválido na resposta da API:', responseData);
+			return {
+				errors: { _form: ['Resposta inválida do servidor. Token não encontrado.'] },
+				message: 'Resposta inválida do servidor.',
+				success: false,
+			};
 		}
+
+		console.log('Login bem-sucedido:', responseData);
 
 		return {
 			message: responseData.message,

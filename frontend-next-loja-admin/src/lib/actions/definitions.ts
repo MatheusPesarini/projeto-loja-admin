@@ -81,6 +81,6 @@ export type RegisterFormState = {
 };
 
 export type SessionPayload = {
-	userId: string;
+	vendorId: string;
 	expiresAt: Date;
 };
