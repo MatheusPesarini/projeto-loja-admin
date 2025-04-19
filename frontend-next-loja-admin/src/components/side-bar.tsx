@@ -2,44 +2,50 @@
 
 import Link from 'next/link';
 import {
-    ArrowUpCircleIcon,
-    LayoutDashboard,
-    PackageSearch,
-} from "lucide-react";  
+  ArrowUpCircleIcon,
+  LayoutDashboard,
+  PackageSearch,
+} from "lucide-react";
 
 import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarHeader,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
 } from './ui/sidebar';
 
 import LogoutButton from './logout-button';
 import Image from 'next/image';
+import ThemeButton from './theme-switch-button';
 
 const data = {
-    dashboard: {
-        icon: <LayoutDashboard />,
-        label: 'Dashboard',
-        href: '/dashboard',
-    },
-    products: {
-        icon: <PackageSearch />,
-        label: 'Produtos',
-        href: '/dashboard/products',
-    },
+  dashboard: {
+    icon: <LayoutDashboard />,
+    label: 'Dashboard',
+    href: '/dashboard',
+  },
+  products: {
+    icon: <PackageSearch />,
+    label: 'Produtos',
+    href: '/dashboard/products',
+  },
 }
 
-export default function SideBar({ ...props }: React.ComponentProps<typeof Sidebar>, { isAuthenticated }: { isAuthenticated: boolean }) {
-    if (!isAuthenticated) {
-        return null;
-    }
+export default function SideBar({
+  isAuthenticated,
+  ...props
+}: React.ComponentProps<typeof Sidebar> & { isAuthenticated: boolean }) {
+  if (!isAuthenticated) {
+    return null;
+  }
 
-    return (
-        <Sidebar collapsible="offcanvas" {...props}>
+  return (
+    <SidebarProvider>
+      <Sidebar collapsible="offcanvas" {...props}>
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
@@ -53,14 +59,17 @@ export default function SideBar({ ...props }: React.ComponentProps<typeof Sideba
           </SidebarMenu>
         </SidebarHeader>
         <SidebarContent>
-          <NavMain items={data.navMain} />
-          <NavDocuments items={data.documents} />
-          <NavSecondary items={data.navSecondary} className="mt-auto" />
-          <LogoutButton/>
+          {/* <NavMain items={data.navMain} />
+        <NavDocuments items={data.documents} />
+        <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
+          <LogoutButton />
         </SidebarContent>
         <SidebarFooter>
-          <NavUser user={data.user} />
+          {/* <NavUser user={data.user} /> */}
+          <ThemeButton />
         </SidebarFooter>
       </Sidebar>
-    );
+
+    </SidebarProvider>
+  );
 }

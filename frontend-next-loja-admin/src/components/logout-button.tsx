@@ -13,7 +13,7 @@ export default function LogoutButton() {
 		try {
 			await submitLogout();
 			setIsAuthenticated(false);
-			router.push('/login');
+			router.push('/');
 		} catch (error) {
 			console.error('Erro ao fazer logout', error);
 		}
