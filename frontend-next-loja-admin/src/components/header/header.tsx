@@ -5,12 +5,10 @@ import LogoutButton from '../logoutButton/logoutButton';
 import Image from 'next/image';
 
 export default function Header({ isAuthenticated }: { isAuthenticated: boolean }) {
-    // Se não estiver autenticado, não renderiza nada (retorna null)
     if (!isAuthenticated) {
         return null;
     }
 
-    // Se estiver autenticado, renderiza o header completo
     return (
         <header className="flex py-2 px-4 bg-gray-800 text-white">
             <div className="flex items-center justify-between w-full max-w-7xl mx-auto">
