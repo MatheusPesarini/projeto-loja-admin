@@ -48,10 +48,10 @@ export const RegisterFormSchema = z.object({
 export const ProductSchema = z.object({
 	id: z.string(),
 	name: z.string(),
-	price: z.number(),
+	price: z.string(),
 	description: z.string(),
 	category: z.string(),
-	quantity: z.number(),
+	quantity: z.string(),
 	createdAt: z.string(),
 	updatedAt: z.string(),
 	image: z.string().url(),
@@ -81,6 +81,19 @@ export type RegisterFormState = {
 	message?: string;
 	success: boolean;
 };
+
+export type ProductFormState = {
+	errors?: {
+		name?: string[];
+		price?: string[];
+		description?: string[];
+		category?: string[];
+		quantity?: string[];
+		image?: string[];
+	}
+	message?: string;
+	success: boolean;
+}
 
 export type SessionPayload = {
 	vendorId: string;

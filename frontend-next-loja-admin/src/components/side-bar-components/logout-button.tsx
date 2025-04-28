@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@/context/AuthContext';
-import { submitLogout } from '@/lib/actions/auth/postLogout';
+import { submitLogout } from '@/lib/actions/auth/post-logout';
 import { LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '../ui/button';
