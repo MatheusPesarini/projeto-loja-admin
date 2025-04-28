@@ -11,24 +11,24 @@ export async function submitRegister(
 	prevState: RegisterFormState | undefined,
 	data: FormData,
 ): Promise<RegisterFormState> {
-  const rawFormData = {
-    companyName: data.get('companyName'),
-    cnpj: data.get('cnpj'),
-    email: data.get('email'),
-    password: data.get('password'),
-  };
+	const rawFormData = {
+		companyName: data.get('companyName'),
+		cnpj: data.get('cnpj'),
+		email: data.get('email'),
+		password: data.get('password'),
+	};
 
-  let cleanedCnpj = '';
+	let cleanedCnpj = '';
 	if (typeof rawFormData.cnpj === 'string') {
 		cleanedCnpj = rawFormData.cnpj.replace(/\D/g, '');
 	}
 
-  const dataToValidate = {
-    ...rawFormData,
-    cnpj: cleanedCnpj, 
-  };
+	const dataToValidate = {
+		...rawFormData,
+		cnpj: cleanedCnpj,
+	};
 
-  const validatedFields = RegisterFormSchema.safeParse(dataToValidate);
+	const validatedFields = RegisterFormSchema.safeParse(dataToValidate);
 
 	if (!validatedFields.success) {
 		return {

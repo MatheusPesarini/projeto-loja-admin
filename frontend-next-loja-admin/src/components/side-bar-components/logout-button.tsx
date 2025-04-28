@@ -21,9 +21,9 @@ export default function LogoutButton() {
 	};
 
 	return (
-		<Button className='w-auto p-0 cursor-pointer' onClick={handleLogout}>
+		<Button className="w-auto p-0 cursor-pointer" onClick={handleLogout}>
 			<LogOut className="h-[1.2rem] w-[1.2rem]" />
 			<span className="sr-only">Alternar tema</span>
 		</Button>
-	)
+	);
 }

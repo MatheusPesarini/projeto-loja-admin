@@ -1,7 +1,7 @@
-import { SiteHeader } from "@/components/dashboard-components/siteHeader";
-import CreateProductButton from "@/components/products-components/createProductButton";
-import SideBar from "@/components/side-bar-components/sideBar";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { SiteHeader } from '@/components/dashboard-components/siteHeader';
+import CreateProductButton from '@/components/products-components/createProductButton';
+import SideBar from '@/components/side-bar-components/sideBar';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 
 export default function Dashboard() {
 	return (

@@ -1,9 +1,9 @@
-import SideBar from "@/components/side-bar-components/sideBar"
+import SideBar from '@/components/side-bar-components/sideBar';
 // import { ChartAreaInteractive } from "@/components/dashboardComponents/chart-area-interactive"
 // import { DataTable } from "@/components/dashboardComponents/data-table"
-import { SectionCards } from "@/components/dashboard-components/sectionCards"
-import { SiteHeader } from "@/components/dashboard-components/siteHeader"
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { SectionCards } from '@/components/dashboard-components/sectionCards';
+import { SiteHeader } from '@/components/dashboard-components/siteHeader';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 
 export default function Page() {
 	return (
@@ -24,5 +24,5 @@ export default function Page() {
 				</div>
 			</SidebarInset>
 		</SidebarProvider>
-	)
+	);
 }
