@@ -15,24 +15,23 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarProvider,
-} from './ui/sidebar';
+} from '../ui/sidebar';
 
-import LogoutButton from './sideBarComponents/logout-button';
-import Image from 'next/image';
-import ThemeButton from './sideBarComponents/theme-switch-button';
-import { NavSecondary } from './sideBarComponents/nav-secondary';
-import { NavMain } from './sideBarComponents/nav-main';
+import LogoutButton from './logout-button';
+import { ThemeToggle } from './theme-switch-button';
+import { NavSecondary } from './nav-secondary';
+import { NavMain } from './nav-main';
+import Link from 'next/link';
 
 const data = {
   navMain: [
     {
-      title: 'Dashboard',
+      name: 'Dashboard',
       url: '/dashboard',
       icon: LayoutDashboard,
     },
     {
-      title: 'Produtos',
+      name: 'Produtos',
       url: '/dashboard/products',
       icon: PackageSearch,
     }
@@ -64,23 +63,23 @@ export default function SideBar({
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#">
+              <Link href="#">
                 <ArrowUpCircleIcon className="h-5 w-5" />
                 <span className="text-base font-semibold">Nome Empresa</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        {/* <NavMain items={data.navMain} /> */}
+        <NavMain items={data.navMain} />
         {/* <NavDocuments items={data.documents} /> */}
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         {/* <NavUser user={data.user} /> */}
         <LogoutButton />
-        <ThemeButton />
+        <ThemeToggle />
       </SidebarFooter>
     </Sidebar>
   );
