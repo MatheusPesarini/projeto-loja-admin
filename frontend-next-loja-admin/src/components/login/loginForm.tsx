@@ -58,7 +58,7 @@ export default function LoginForm({
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<form action={formAction} method="post" className="space-y-4">
+					<form action={formAction} className="space-y-4">
 						{' '}
 						<div className="grid gap-2">
 							<Label htmlFor="email">E-mail</Label>

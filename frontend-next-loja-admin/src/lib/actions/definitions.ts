@@ -48,15 +48,18 @@ export const RegisterFormSchema = z.object({
 export const ProductSchema = z.object({
 	id: z.string(),
 	productName: z.string(),
-	price: z.string(),
-	discount: z.string(),
+	price: z.coerce.number(),
+	discount: z.coerce.number(),
 	description: z.string(),
 	category: z.string(),
-	quantity: z.string(),
+	quantity: z.coerce.number(),
 	createdAt: z.string(),
 	updatedAt: z.string(),
-	image: z.string().url(),
 });
+
+export const ImageSchema = z.object({
+	image: z.string(),
+})
 
 export type Product = z.infer<typeof ProductSchema>;
 

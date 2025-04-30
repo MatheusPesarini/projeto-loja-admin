@@ -90,7 +90,7 @@ export default function RegisterForm({
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<form action={formAction} method="post" className="space-y-4">
+					<form action={formAction} className="space-y-4">
 						{' '}
 						<div className="grid gap-2">
 							<Label htmlFor="companyName">Nome da Empresa</Label>

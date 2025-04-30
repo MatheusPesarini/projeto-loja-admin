@@ -49,7 +49,7 @@ export default function CreateProductButton() {
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
-				<form action={formAction} method="post">
+				<form action={formAction}>
 					<DialogHeader>
 						<DialogTitle>Adicionar Produto</DialogTitle>
 						<DialogDescription>
