@@ -52,6 +52,12 @@ export default function CreateProductButton() {
 						<Input id="price" className="col-span-3" />
 					</div>
 					<div className="grid grid-cols-4 items-center gap-4">
+						<Label htmlFor="discount" className="text-right">
+							Desconto
+						</Label>
+						<Input id="discount" className="col-span-3" defaultValue={0}/>
+					</div>
+					<div className="grid grid-cols-4 items-center gap-4">
 						<Label htmlFor="quantity" className="text-right">
 							Quantidade
 						</Label>

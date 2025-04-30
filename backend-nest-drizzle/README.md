@@ -5,20 +5,21 @@
 ## Project setup
 
 ```bash
-$ npm install
+npm install
 ```
+
+# .env
+
+PORT: port-number
+DATABASE_URL=postgresql://username:password@localhost:port/dbName?schema=public
+JWT_SECRET="secret"
+JWT_EXPIRATION=7d
 
 ## Compile and run the project
 
 ```bash
 # development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+$ npm run api
 ```
 
 ## Run tests
