@@ -58,6 +58,7 @@ export const ProductSchema = z.object({
 	createdAt: z.string(),
 	updatedAt: z.string(),
 	image: z.string().optional(),
+	vendorId: z.string(),
 });
 
 export const ImageSchema = z.object({

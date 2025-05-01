@@ -1,27 +1,36 @@
-import {
-	FileSchema,
-	ImageSchema,
-	ProductFormState,
-	ProductSchema,
-} from '../definitions';
+'use server';
+
+import { getVendorId } from '@/lib/session/get-vendor-id';
+import { FileSchema, ProductFormState, ProductSchema } from '../definitions';
 
 export async function submitProduct(
 	prevState: ProductFormState | undefined,
 	data: FormData,
 ): Promise<ProductFormState> {
+	const vendorId = await getVendorId();
+
 	const validatedFields = ProductSchema.safeParse({
-		name: data.get('name') as string,
-		brand: data.get('brand') as string,
-		model: data.get('model') as string,
-		category: data.get('category') as string,
-		quantity: parseInt(data.get('quantity') as string),
-		price: parseFloat(data.get('price') as string),
-		discount: parseFloat(data.get('discount') as string),
-		description: data.get('description') as string,
+		productName: data.get('productName'),
+		brand: data.get('brand'),
+		model: data.get('model'),
+		category: data.get('category'),
+		quantity: data.get('quantity'),
+		price: data.get('price'),
+		discount: data.get('discount'),
+		description: data.get('description'),
+		vendorId: vendorId,
 	});
 
 	const imageFile = data.get('image');
 	const validatedImage = FileSchema.safeParse(imageFile);
+
+	if (!vendorId) {
+		return {
+			errors: { _form: ['Erro ao obter o ID do vendedor.'] },
+			message: 'Erro de validação. Verifique os campos destacados.',
+			success: false,
+		};
+	}
 
 	if (!validatedFields.success) {
 		return {
@@ -40,6 +49,7 @@ export async function submitProduct(
 
 	let imageUrl = '';
 	try {
+		console.log('Tentando fazer upload da imagem...');
 		const imageFormData = new FormData();
 		imageFormData.append('image', validatedImage.data);
 
@@ -71,9 +81,10 @@ export async function submitProduct(
 		const validatedFieldsWithImage = {
 			...validatedFields.data,
 			image: imageUrl,
+			vendorId: vendorId,
 		};
 
-		const productResponse = await fetch('http://localhost:3001/product/post', {
+		const productResponse = await fetch('http://localhost:3001/product', {
 			method: 'POST',
 			cache: 'no-cache',
 			headers: {

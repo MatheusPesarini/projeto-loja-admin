@@ -1,3 +1,5 @@
+"use client";
+
 import { Plus } from 'lucide-react';
 import { Button } from '../ui/button';
 import {
@@ -61,7 +63,7 @@ export default function CreateProductButton() {
 					<div className="grid gap-4 py-4">
 						<div className="grid grid-cols-4 items-center gap-4">
 							<Label htmlFor="productName" className="text-right">
-								Nome do Produto
+								Nome
 							</Label>
 							<Input
 								id="productName"
@@ -140,7 +142,7 @@ export default function CreateProductButton() {
 								aria-describedby="category-error"
 								className={cn(
 									'text-black bg-amber-50 w-full p-2 col-span-3 rounded border',
-									productNameErrors ? 'border-red-500' : 'border-gray-300',
+									categoryErrors ? 'border-red-500' : 'border-gray-300',
 								)}
 							/>
 							<div id="category-error" aria-live="polite" aria-atomic="true">
@@ -277,10 +279,17 @@ export default function CreateProductButton() {
 								))}
 							</div>
 						</div>
+						<div id="form-error" aria-live="polite" aria-atomic="true">
+							{formErrors?.map((error: string) => (
+								<p className="mt-1 text-sm text-red-500" key={error}>
+									{error}
+								</p>
+							))}
+						</div>
 					</div>
 					<DialogFooter>
-						<Button type="submit" className="cursor-pointer">
-							Adicionar
+						<Button type="submit" className="cursor-pointer" disabled={isPending}>
+							{isPending ? 'Salvando...' : 'Salvar'}
 						</Button>
 					</DialogFooter>
 				</form>

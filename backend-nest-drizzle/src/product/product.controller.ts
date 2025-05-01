@@ -11,7 +11,7 @@ export class ProductController {
     return this.productService.getAllVendorProducts(vendorId);
   }
 
-  @Post(":post") 
+  @Post() 
   async createVendorProduct(@Body() vendorProductData: createProductRequest) {
     return this.productService.createVendorProduct(vendorProductData);
   }
