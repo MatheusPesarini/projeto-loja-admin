@@ -48,18 +48,36 @@ export const RegisterFormSchema = z.object({
 export const ProductSchema = z.object({
 	id: z.string(),
 	productName: z.string(),
+	brand: z.string(),
+	model: z.string(),
+	category: z.string(),
 	price: z.coerce.number(),
 	discount: z.coerce.number(),
-	description: z.string(),
-	category: z.string(),
 	quantity: z.coerce.number(),
+	description: z.string(),
 	createdAt: z.string(),
 	updatedAt: z.string(),
+	image: z.string().optional(),
 });
 
 export const ImageSchema = z.object({
 	image: z.string(),
-})
+});
+
+export const FileSchema = z
+	.instanceof(File, { message: 'É necessário enviar uma imagem.' })
+	.refine((file) => file.size > 0, 'A imagem não pode estar vazia.')
+	.refine(
+		(file) => file.size <= 5 * 1024 * 1024,
+		`O tamanho máximo da imagem é 5MB.`,
+	)
+	.refine(
+		(file) =>
+			['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(
+				file.type,
+			),
+		'Formato de imagem inválido. Use JPG, PNG, WEBP ou GIF.',
+	);
 
 export type Product = z.infer<typeof ProductSchema>;
 
@@ -89,11 +107,13 @@ export type RegisterFormState = {
 export type ProductFormState = {
 	errors?: {
 		productName?: string[];
+		brand?: string[];
+		model?: string[];
+		category?: string[];
+		quantity?: string[];
 		price?: string[];
 		discount?: string[];
 		description?: string[];
-		category?: string[];
-		quantity?: string[];
 		image?: string[];
 		_form?: string[];
 	};

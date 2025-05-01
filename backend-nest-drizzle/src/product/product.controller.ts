@@ -11,7 +11,7 @@ export class ProductController {
     return this.productService.getAllVendorProducts(vendorId);
   }
 
-  @Post() // Após criar o sistema de autenticação, enviar o vendorId na requisição
+  @Post(":post") 
   async createVendorProduct(@Body() vendorProductData: createProductRequest) {
     return this.productService.createVendorProduct(vendorProductData);
   }

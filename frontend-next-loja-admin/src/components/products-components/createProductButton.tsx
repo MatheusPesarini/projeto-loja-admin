@@ -12,7 +12,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useActionState } from 'react';
-import submitProduct from '@/lib/actions/product/post-product';
+import { submitProduct } from '@/lib/actions/product/post-product';
 import { cn } from '@/lib/utils';
 
 const initialState = {
@@ -28,12 +28,14 @@ export default function CreateProductButton() {
 	);
 
 	const productNameErrors = state?.errors?.productName;
-	const priceErrors = state?.errors?.price;
-	const descriptionErrors = state?.errors?.description;
+	const brandErrors = state?.errors?.brand;
+	const modelErrors = state?.errors?.model;
 	const categoryErrors = state?.errors?.category;
-	const quantityErrors = state?.errors?.quantity;
-	const imageErrors = state?.errors?.image;
+	const priceErrors = state?.errors?.price;
 	const discountErrors = state?.errors?.discount;
+	const quantityErrors = state?.errors?.quantity;
+	const descriptionErrors = state?.errors?.description;
+	const imageErrors = state?.errors?.image;
 	const formErrors = state?.errors?._form;
 
 	return (
@@ -66,15 +68,61 @@ export default function CreateProductButton() {
 								type="text"
 								name="productName"
 								required
-								aria-describedby='productName-error'
+								aria-describedby="productName-error"
 								className={cn(
 									'text-black bg-amber-50 w-full p-2 col-span-3 rounded border',
 									productNameErrors ? 'border-red-500' : 'border-gray-300',
 								)}
 							/>
-							<div id='productName-error' aria-live='polite' aria-atomic='true'>
-								{productNameErrors && productNameErrors.map((error: string) => (
-									<p className='mt-1 text-sm text-red-500' key={error}>
+							<div id="productName-error" aria-live="polite" aria-atomic="true">
+								{productNameErrors?.map((error: string) => (
+									<p className="mt-1 text-sm text-red-500" key={error}>
+										{error}
+									</p>
+								))}
+							</div>
+						</div>
+						<div className="grid grid-cols-4 items-center gap-4">
+							<Label htmlFor="brand" className="text-right">
+								Marca
+							</Label>
+							<Input
+								id="brand"
+								type="text"
+								name="brand"
+								required
+								aria-describedby="brand-error"
+								className={cn(
+									'text-black bg-amber-50 w-full p-2 col-span-3 rounded border',
+									brandErrors ? 'border-red-500' : 'border-gray-300',
+								)}
+							/>
+							<div id="brand-error" aria-live="polite" aria-atomic="true">
+								{brandErrors?.map((error: string) => (
+									<p className="mt-1 text-sm text-red-500" key={error}>
+										{error}
+									</p>
+								))}
+							</div>
+						</div>
+						<div className="grid grid-cols-4 items-center gap-4">
+							<Label htmlFor="model" className="text-right">
+								Modelo
+							</Label>
+							<Input
+								id="model"
+								type="text"
+								name="model"
+								required
+								aria-describedby="model-error"
+								className={cn(
+									'text-black bg-amber-50 w-full p-2 col-span-3 rounded border',
+									modelErrors ? 'border-red-500' : 'border-gray-300',
+								)}
+							/>
+							<div id="model-error" aria-live="polite" aria-atomic="true">
+								{modelErrors?.map((error: string) => (
+									<p className="mt-1 text-sm text-red-500" key={error}>
 										{error}
 									</p>
 								))}
@@ -89,15 +137,15 @@ export default function CreateProductButton() {
 								type="text"
 								name="category"
 								required
-								aria-describedby='category-error'
+								aria-describedby="category-error"
 								className={cn(
 									'text-black bg-amber-50 w-full p-2 col-span-3 rounded border',
 									productNameErrors ? 'border-red-500' : 'border-gray-300',
 								)}
 							/>
-							<div id='category-error' aria-live='polite' aria-atomic='true'>
-								{categoryErrors && categoryErrors.map((error: string) => (
-									<p className='mt-1 text-sm text-red-500' key={error}>
+							<div id="category-error" aria-live="polite" aria-atomic="true">
+								{categoryErrors?.map((error: string) => (
+									<p className="mt-1 text-sm text-red-500" key={error}>
 										{error}
 									</p>
 								))}
@@ -112,15 +160,17 @@ export default function CreateProductButton() {
 								type="text"
 								name="price"
 								required
-								aria-describedby='price-error'
+								min={0}
+								aria-invalid={priceErrors ? 'true' : 'false'}
+								aria-describedby="price-error"
 								className={cn(
 									'text-black bg-amber-50 w-full p-2 col-span-3 rounded border',
 									priceErrors ? 'border-red-500' : 'border-gray-300',
 								)}
 							/>
-							<div id='price-error' aria-live='polite' aria-atomic='true'>
-								{priceErrors && priceErrors.map((error: string) => (
-									<p className='mt-1 text-sm text-red-500' key={error}>
+							<div id="price-error" aria-live="polite" aria-atomic="true">
+								{priceErrors?.map((error: string) => (
+									<p className="mt-1 text-sm text-red-500" key={error}>
 										{error}
 									</p>
 								))}
@@ -130,20 +180,28 @@ export default function CreateProductButton() {
 							<Label htmlFor="discount" className="text-right">
 								Desconto
 							</Label>
-							<Input
-								id="discount"
-								type="text"
-								name="discount"
-								required
-								aria-describedby='discount-error'
-								className={cn(
-									'text-black bg-amber-50 w-full p-2 col-span-3 rounded border',
-									discountErrors ? 'border-red-500' : 'border-gray-300',
-								)}
-							/>
-							<div id='discount-error' aria-live='polite' aria-atomic='true'>
-								{discountErrors && discountErrors.map((error: string) => (
-									<p className='mt-1 text-sm text-red-500' key={error}>
+							<div className="col-span-3 flex items-center gap-2">
+								<Input
+									id="discount"
+									type="number"
+									name="discount"
+									defaultValue="0"
+									required
+									min={0}
+									max={100}
+									step="0.01"
+									aria-invalid={discountErrors ? 'true' : 'false'}
+									aria-describedby="discount-error"
+									className={cn(
+										'text-black bg-amber-50 w-full p-2 rounded border', // w-full para preencher espaço flexível
+										discountErrors ? 'border-red-500' : 'border-gray-300',
+									)}
+								/>
+								<span className="text-gray-500">%</span>
+							</div>
+							<div id="discount-error" aria-live="polite" aria-atomic="true">
+								{discountErrors?.map((error: string) => (
+									<p className="mt-1 text-sm text-red-500" key={error}>
 										{error}
 									</p>
 								))}
@@ -158,15 +216,16 @@ export default function CreateProductButton() {
 								type="text"
 								name="quantity"
 								required
-								aria-describedby='quantity-error'
+								min={0}
+								aria-describedby="quantity-error"
 								className={cn(
 									'text-black bg-amber-50 w-full p-2 col-span-3 rounded border',
 									quantityErrors ? 'border-red-500' : 'border-gray-300',
 								)}
 							/>
-							<div id='quantity-error' aria-live='polite' aria-atomic='true'>
-								{quantityErrors && quantityErrors.map((error: string) => (
-									<p className='mt-1 text-sm text-red-500' key={error}>
+							<div id="quantity-error" aria-live="polite" aria-atomic="true">
+								{quantityErrors?.map((error: string) => (
+									<p className="mt-1 text-sm text-red-500" key={error}>
 										{error}
 									</p>
 								))}
@@ -181,15 +240,15 @@ export default function CreateProductButton() {
 								type="text"
 								name="description"
 								required
-								aria-describedby='description-error'
+								aria-describedby="description-error"
 								className={cn(
 									'text-black bg-amber-50 w-full p-2 col-span-3 rounded border',
 									descriptionErrors ? 'border-red-500' : 'border-gray-300',
 								)}
 							/>
-							<div id='description-error' aria-live='polite' aria-atomic='true'>
-								{descriptionErrors && descriptionErrors.map((error: string) => (
-									<p className='mt-1 text-sm text-red-500' key={error}>
+							<div id="description-error" aria-live="polite" aria-atomic="true">
+								{descriptionErrors?.map((error: string) => (
+									<p className="mt-1 text-sm text-red-500" key={error}>
 										{error}
 									</p>
 								))}
@@ -204,15 +263,15 @@ export default function CreateProductButton() {
 								type="file"
 								name="image"
 								required
-								aria-describedby='image-error'
+								aria-describedby="image-error"
 								className={cn(
 									'text-black bg-amber-50 w-full p-2 col-span-3 rounded border',
 									productNameErrors ? 'border-red-500' : 'border-gray-300',
 								)}
 							/>
-							<div id='image-error' aria-live='polite' aria-atomic='true'>
-								{imageErrors && imageErrors.map((error: string) => (
-									<p className='mt-1 text-sm text-red-500' key={error}>
+							<div id="image-error" aria-live="polite" aria-atomic="true">
+								{imageErrors?.map((error: string) => (
+									<p className="mt-1 text-sm text-red-500" key={error}>
 										{error}
 									</p>
 								))}
