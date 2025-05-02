@@ -1,15 +1,24 @@
 'use server';
 
 import { getVendorId } from '@/lib/session/get-vendor-id';
-import { FileSchema, ProductFormState, ProductSchema } from '../definitions';
+import { FileSchema, ProductFormState, ProductFormSchema } from '../definitions';
 
 export async function submitProduct(
 	prevState: ProductFormState | undefined,
 	data: FormData,
 ): Promise<ProductFormState> {
 	const vendorId = await getVendorId();
+	
+	if (!vendorId) {
+		return {
+			errors: { _form: ['Erro ao obter o ID do vendedor.'] },
+			message: 'Erro de validação. Verifique os campos destacados.',
+			success: false,
+		};
+	}
+	console.log('ID do vendedor:', vendorId);
 
-	const validatedFields = ProductSchema.safeParse({
+	const validatedFields = ProductFormSchema.safeParse({
 		productName: data.get('productName'),
 		brand: data.get('brand'),
 		model: data.get('model'),
@@ -23,14 +32,6 @@ export async function submitProduct(
 
 	const imageFile = data.get('image');
 	const validatedImage = FileSchema.safeParse(imageFile);
-
-	if (!vendorId) {
-		return {
-			errors: { _form: ['Erro ao obter o ID do vendedor.'] },
-			message: 'Erro de validação. Verifique os campos destacados.',
-			success: false,
-		};
-	}
 
 	if (!validatedFields.success) {
 		return {
@@ -46,6 +47,8 @@ export async function submitProduct(
 			success: false,
 		};
 	}
+
+	console.log('Validações passaram. Tentando upload da imagem...'); // Log antes do upload
 
 	let imageUrl = '';
 	try {
@@ -65,6 +68,8 @@ export async function submitProduct(
 				success: false,
 			};
 		}
+
+		console.log('Upload da imagem concluído. Tentando criar produto...'); // Log antes de criar produto
 
 		const imageResult = await imageUploadResponse.json();
 		imageUrl = imageResult.imageUrl;

@@ -45,20 +45,51 @@ export const RegisterFormSchema = z.object({
 		.trim(),
 });
 
-export const ProductSchema = z.object({
-	id: z.string(),
-	productName: z.string(),
-	brand: z.string(),
-	model: z.string(),
+export const ProductFormSchema = z.object({
+	productName: z.string().min(1, {
+		message: 'Por favor digite o nome do produto.',
+	}).max(50, {
+		message: 'O nome do produto deve ter no máximo 50 caracteres.',
+	}).trim(),
+	brand: z.string().min(1, {
+		message: 'Por favor digite a marca do produto.',
+	}).max(20, {
+		message: 'A marca do produto deve ter no máximo 50 caracteres.',
+	}).trim(),
+	model: z.string().min(1, {
+		message: 'Por favor digite o modelo do produto.',
+	}).max(20, {
+		message: 'O modelo do produto deve ter no máximo 50 caracteres.',
+	}).trim(),
 	category: z.string(),
-	price: z.coerce.number(),
-	discount: z.coerce.number(),
-	quantity: z.coerce.number(),
-	description: z.string(),
-	createdAt: z.string(),
-	updatedAt: z.string(),
-	image: z.string().optional(),
+	price: z.coerce.number().min(0, {
+		message: 'O preço deve ser maior que 0.',
+	}).max(999999, {
+		message: 'O preço deve ser menor que 999999.',
+	}).refine((value) => value > 0, {
+		message: 'O preço deve ser maior que 0.',
+	}),
+	discount: z.coerce.number().min(0, {
+		message: 'O desconto deve ser maior ou igual a 0.',
+	}).max(100, {
+		message: 'O desconto deve ser menor ou igual a 100.',
+	}).refine((value) => value >= 0, {
+		message: 'O desconto deve ser maior ou igual a 0.',
+	}),
+	quantity: z.coerce.number().min(0, {
+		message: 'A quantidade deve ser maior que 0.',
+	}).max(999999, {
+		message: 'A quantidade deve ser menor que 999999.',
+	}).refine((value) => value > 0, {
+		message: 'A quantidade deve ser maior que 0.',
+	}),
+	description: z.string().min(1, {
+		message: 'Por favor digite a descrição do produto.',
+	}).max(500, {
+		message: 'A descrição do produto deve ter no máximo 500 caracteres.',
+	}).trim(),
 	vendorId: z.string(),
+	image: z.string().optional(),
 });
 
 export const ImageSchema = z.object({
@@ -80,7 +111,7 @@ export const FileSchema = z
 		'Formato de imagem inválido. Use JPG, PNG, WEBP ou GIF.',
 	);
 
-export type Product = z.infer<typeof ProductSchema>;
+export type Product = z.infer<typeof ProductFormSchema>;
 
 export type LoginFormState = {
 	errors?: {
