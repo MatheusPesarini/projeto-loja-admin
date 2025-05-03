@@ -1,11 +1,22 @@
 'use client';
 
 import { MoonIcon, SunIcon } from 'lucide-react';
-import { useTheme } from '@/context/ThemeProvider';
+import { useTheme } from 'next-themes';
 import { Button } from '../ui/button';
+import { useEffect, useState } from 'react';
 
 export function ThemeToggle() {
+	const [mounted, setMounted] = useState(false);
 	const { theme, setTheme } = useTheme();
+
+	useEffect(() => {
+		setMounted(true);
+	}, []);
+
+	if (!mounted) {
+		return <Button size="icon" disabled className="w-auto p-0 cursor-pointer" aria-label="Alternar tema" />;
+	}
+
 
 	return (
 		<Button

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, ParseUUIDPipe, Post } from "@nestjs/common";
 import { ProductService } from "./product.service";
 import { createProductRequest } from "./dto/product.request";
 
@@ -7,11 +7,12 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get(":vendorId")
-  async getAllVendorProducts(@Param("vendorId") vendorId: string) {
+  async getAllVendorProducts(@Param("vendorID", ParseUUIDPipe) vendorId: string) {
     return this.productService.getAllVendorProducts(vendorId);
   }
 
-  @Post() 
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
   async createVendorProduct(@Body() vendorProductData: createProductRequest) {
     return this.productService.createVendorProduct(vendorProductData);
   }

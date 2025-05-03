@@ -49,7 +49,7 @@ export const product = pgTable("Product", {
 	category: text().notNull(),
 	price: numeric({ precision: 10, scale:  2 }).notNull(),
 	quantity: integer().notNull(),
-	description: text(),
+	description: text().notNull(),
 	image: text().notNull(),
 	createdAt: timestamp({ withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	updatedAt: timestamp({ withTimezone: true, mode: 'string' }).defaultNow().notNull(),

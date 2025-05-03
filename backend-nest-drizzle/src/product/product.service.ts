@@ -1,8 +1,14 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { InferInsertModel } from "drizzle-orm";
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from "@nestjs/common";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { DATABASE_CONNECTION } from "src/database/database-connection";
 import * as schema from "src/database/schema/schema";
+import { createProductRequest } from "./dto/product.request";
+import { eq } from "drizzle-orm";
 
 @Injectable()
 export class ProductService {
@@ -12,14 +18,68 @@ export class ProductService {
   ) {}
 
   async getAllVendorProducts(vendorId: string) {
+    const vendorExists = await this.database.query.vendor.findFirst({
+      where: eq(schema.vendor.id, vendorId),
+      columns: { id: true },
+    });
+    if (!vendorExists) {
+      throw new NotFoundException(
+        `Vendedor com ID ${vendorId} não encontrado.`,
+      );
+    }
+
     return this.database.query.product.findMany({
-      where: (product, { eq }) => eq(product.vendorId, vendorId),
+      where: eq(schema.product.vendorId, vendorId),
     });
   }
 
-  async createVendorProduct(
-    vendorProductData: InferInsertModel<typeof schema.product>,
-  ) {
-    await this.database.insert(schema.product).values(vendorProductData);
+  async createVendorProduct(productDataDto: createProductRequest) {
+    const vendorIdToVerify = productDataDto.vendorId;
+    const vendorExists = await this.database.query.vendor.findFirst({
+      where: eq(schema.vendor.id, vendorIdToVerify),
+      columns: { id: true },
+    });
+    if (!vendorExists) {
+      throw new NotFoundException(
+        `Vendedor com ID ${vendorIdToVerify} não encontrado. Não é possível criar o produto.`,
+      );
+    }
+
+    const productToInsert = {
+      productName: productDataDto.productName,
+      brand: productDataDto.brand,
+      model: productDataDto.model,
+      category: productDataDto.category,
+      price: String(productDataDto.price),
+      discount:
+        productDataDto.discount !== undefined
+          ? String(productDataDto.discount)
+          : null,
+      quantity: productDataDto.quantity,
+      description: productDataDto.description,
+      image: productDataDto.image ?? "url_padrao_ou_erro", // Ajuste conforme necessário
+      vendorId: productDataDto.vendorId,
+    };
+
+    try {
+      const [newProduct] = await this.database
+        .insert(schema.product)
+        .values(productToInsert)
+        .returning();
+
+      if (!newProduct) {
+        throw new InternalServerErrorException(
+          "Falha ao criar o produto e retornar os dados.",
+        );
+      }
+
+      console.log("Produto inserido com sucesso:", newProduct);
+      return newProduct;
+    } catch (error) {
+      console.error("Erro ao inserir produto no banco de dados:", error);
+      throw new InternalServerErrorException(
+        "Ocorreu um erro ao tentar criar o produto.",
+      );
+    }
   }
 }

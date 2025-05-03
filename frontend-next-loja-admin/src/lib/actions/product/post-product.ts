@@ -8,7 +8,7 @@ export async function submitProduct(
 	data: FormData,
 ): Promise<ProductFormState> {
 	const vendorId = await getVendorId();
-	
+
 	if (!vendorId) {
 		return {
 			errors: { _form: ['Erro ao obter o ID do vendedor.'] },
@@ -16,7 +16,7 @@ export async function submitProduct(
 			success: false,
 		};
 	}
-	console.log('ID do vendedor:', vendorId);
+	// console.log('ID do vendedor:', vendorId);
 
 	const validatedFields = ProductFormSchema.safeParse({
 		productName: data.get('productName'),
@@ -34,6 +34,7 @@ export async function submitProduct(
 	const validatedImage = FileSchema.safeParse(imageFile);
 
 	if (!validatedFields.success) {
+		console.log('Erro: Falha na validação dos campos.', validatedFields.error.flatten());
 		return {
 			errors: validatedFields.error.flatten().fieldErrors,
 			message: 'Erro de validação. Verifique os campos destacados.',
@@ -41,6 +42,7 @@ export async function submitProduct(
 		};
 	}
 	if (!validatedImage.success) {
+		console.log('Erro: Falha na validação da imagem.', validatedImage.error.flatten());
 		return {
 			errors: { image: validatedImage.error.flatten().formErrors },
 			message: 'Erro de validação. Verifique os campos destacados.',
@@ -48,7 +50,7 @@ export async function submitProduct(
 		};
 	}
 
-	console.log('Validações passaram. Tentando upload da imagem...'); // Log antes do upload
+	console.log('Validações passaram. Tentando upload da imagem...');
 
 	let imageUrl = '';
 	try {
@@ -69,7 +71,7 @@ export async function submitProduct(
 			};
 		}
 
-		console.log('Upload da imagem concluído. Tentando criar produto...'); // Log antes de criar produto
+		console.log('Upload da imagem concluído. Tentando criar produto...');
 
 		const imageResult = await imageUploadResponse.json();
 		imageUrl = imageResult.imageUrl;
@@ -98,22 +100,52 @@ export async function submitProduct(
 			body: JSON.stringify(validatedFieldsWithImage),
 		});
 
+		const productResult = await productResponse.json();
+
 		if (!productResponse.ok) {
-			const errorResponse = await productResponse.json();
+			const deletedImage = fetch('http://localhost:4000/delete-image', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ imageUrl }),
+			});
+
+			if (!(await deletedImage).ok) {
+				console.error('Erro ao deletar a imagem');
+			} else {
+				console.log('Imagem deletada com sucesso.');
+			}
+
 			return {
-				errors: { _form: [errorResponse.message] },
+				errors: { _form: [productResult.message] },
 				message: 'Erro ao criar o produto. Tente novamente.',
 				success: false,
 			};
 		}
 
 		return {
+			message: productResult.message,
 			success: true,
-			message: 'Produto criado com sucesso',
 			errors: {},
 		};
 	} catch (error) {
 		console.error('Erro ao criar o produto:', error);
+
+		const deletedImage = fetch('http://localhost:4000/delete-image', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ imageUrl }),
+		});
+
+		if (!(await deletedImage).ok) {
+			console.error('Erro ao deletar a imagem');
+		} else {
+			console.log('Imagem deletada com sucesso.');
+		}
+
 		return {
 			errors: { _form: ['Erro ao criar o produto.'] },
 			message: 'Erro de validação. Verifique os campos destacados.',
