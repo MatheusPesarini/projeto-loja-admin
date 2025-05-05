@@ -89,6 +89,7 @@ export const ProductFormSchema = z.object({
 		message: 'A descrição do produto deve ter no máximo 500 caracteres.',
 	}).trim(),
 	vendorId: z.string(),
+	image: z.string().optional()
 });
 
 export const ImageSchema = z.object({

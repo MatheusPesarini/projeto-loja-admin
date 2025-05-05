@@ -7,7 +7,7 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get(":vendorId")
-  async getAllVendorProducts(@Param("vendorID", ParseUUIDPipe) vendorId: string) {
+  async getAllVendorProducts(@Param("vendorId", ParseUUIDPipe) vendorId: string) {
     return this.productService.getAllVendorProducts(vendorId);
   }
 

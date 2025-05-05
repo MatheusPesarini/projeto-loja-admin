@@ -10,7 +10,12 @@ const nextConfig: NextConfig = {
 				port: '', // Deixe vazio para porta padrão (443 para https)
 				pathname: '/**', // Permite qualquer caminho dentro deste hostname
 			},
-			// Adicione outros hostnames permitidos aqui, se necessário
+			{
+				protocol: 'http',
+				hostname: 'localhost',
+				port: '4000', 
+				pathname: '/**', 
+			},
 		],
 	},
 };
