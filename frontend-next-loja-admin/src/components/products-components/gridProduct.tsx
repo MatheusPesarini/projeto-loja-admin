@@ -1,7 +1,7 @@
 import { Product } from "@/lib/actions/definitions";
 import Image from "next/image";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import { Button } from "../ui/button";
+import UpdateProductButton from "./updateProductModal";
 
 export default function GridProduct({ products }: { products: Product[] }) {
   if (!products || products.length === 0) {
@@ -19,24 +19,21 @@ export default function GridProduct({ products }: { products: Product[] }) {
               <Image
                 src={product.image || '/placeholder-image.png'} // Forneça uma imagem placeholder
                 alt={product.productName}
-                layout="fill" // Faz a imagem preencher o container
-                objectFit="cover" // Controla como a imagem se ajusta
-                className="rounded-t-lg" // Arredonda apenas os cantos superiores
+                fill
+                className="rounded-t-lg object-cover" // Adicione object-cover aqui
               // Opcional: adicione tratamento de erro ou placeholder enquanto carrega
               // onError={(e) => e.currentTarget.src = '/placeholder-image.png'}
               />
             </div>
           </CardHeader>
-          <CardContent className="p-4">
+          <CardContent className="">
             {' '}
             {/* Conteúdo principal do card */}
-            <CardTitle className="mb-1 text-lg">{product.productName}</CardTitle>
-            <CardDescription className="text-base font-semibold text-primary">
+            <CardTitle className="mb-1 text-lg just">{product.productName}</CardTitle>
+            <CardDescription className="text-base font-semibold text-primary justify-between flex items-center">
               R$ {Number(product.price).toFixed(2).replace('.', ',')}
+              <UpdateProductButton />
             </CardDescription>
-            <Button className="fixed bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-
-            </Button>
           </CardContent>
           {/* <CardFooter className="p-4 pt-0"> */}
           {/* Adicione botões de ação aqui se necessário (ex: Editar, Ver Detalhes) */}

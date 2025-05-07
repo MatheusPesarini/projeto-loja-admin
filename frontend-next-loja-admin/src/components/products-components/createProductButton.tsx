@@ -49,7 +49,7 @@ export default function CreateProductButton() {
 					variant="default"
 					asChild
 				>
-					<Plus />
+					Editar
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
