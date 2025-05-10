@@ -17,6 +17,20 @@ export class ProductService {
     private readonly database: NodePgDatabase<typeof schema>,
   ) {}
 
+  async getProduct(productId: string) {
+    const product = await this.database.query.product.findFirst({
+      where: eq(schema.product.id, productId),
+    });
+
+    if (!product) {
+      throw new NotFoundException(
+        `Produto com ID ${productId} não encontrado.`,
+      );
+    }
+
+    return product;
+  }
+
   async getAllVendorProducts(vendorId: string) {
     const vendorExists = await this.database.query.vendor.findFirst({
       where: eq(schema.vendor.id, vendorId),

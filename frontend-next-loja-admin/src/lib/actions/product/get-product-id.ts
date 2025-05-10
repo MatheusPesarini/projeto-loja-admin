@@ -1,20 +1,17 @@
-import { getVendorId } from "@/lib/session/get-vendor-id";
 import { Product, ProductFormState } from "../definitions";
 
-export async function getProduct(): Promise<ProductFormState> {
-  const vendorId = await getVendorId();
-
-  if (!vendorId) {
+export async function getProductId(productId: string): Promise<ProductFormState> {
+  if (!productId) {
+    console.error('ID do produto não fornecido.');
     return {
-      errors: { _form: ['Erro ao obter o ID do vendedor.'] },
-      message: 'Erro de validação. Verifique os campos destacados.',
+      errors: { _form: ['ID do produto não fornecido.'] },
+      message: 'Erro de validação. Relogue novamente.',
       success: false,
     };
   }
-  console.log('ID do vendedor:', vendorId);
 
   try {
-    const productsResponse = await fetch(`http://localhost:3001/product/${vendorId}`, {
+    const productsResponse = await fetch(`http://localhost:3001/product/edit/${productId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -27,7 +24,7 @@ export async function getProduct(): Promise<ProductFormState> {
         productsResponse.status,
         productsResponse.statusText,
       );
-      let errorDetails = await productsResponse.text(); 
+      let errorDetails = await productsResponse.text();
       console.error('Detalhes do erro:', errorDetails);
 
       return {
@@ -45,15 +42,15 @@ export async function getProduct(): Promise<ProductFormState> {
 
     console.log('Produtos obtidos com sucesso:', productsResult);
 
-    const products: Product[] = Array.isArray(productsResult)
+    const products: Product = Array.isArray(productsResult)
       ? productsResult
-      : productsResult.data || []; 
+      : productsResult.data || [];
 
     return {
       message: 'Produtos obtidos com sucesso.', // Ou use productsResult.message se a API retornar uma
       success: true,
       errors: {},
-      products: products, // Retorne o array de produtos processado
+      products: [products], // Retorne o array de produtos processado
     };
   } catch (error) {
     console.error('Erro ao obter produtos:', error);

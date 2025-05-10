@@ -12,7 +12,7 @@ export async function submitUpdateProduct(
   if (!vendorId) {
     return {
       errors: { _form: ['Erro ao obter o ID do vendedor.'] },
-      message: 'Erro de validação. Verifique os campos destacados.',
+      message: 'Erro de validação. Verifique os campos destacados.', 
       success: false,
     };
   }

@@ -22,7 +22,7 @@ const initialState = {
   errors: {},
 };
 
-export default function UpdateProductButton() {
+export default function DeleteProductButton() {
   const [state, formAction, isPending] = useActionState(
     submitUpdateProduct,
     initialState,
@@ -42,8 +42,8 @@ export default function UpdateProductButton() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded cursor-pointer" asChild variant="default">
-          Editar
+        <Button className="bg-red-500 hover:bg-red-700 text-white font-bold rounded cursor-pointer size-sm">
+          Remover
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

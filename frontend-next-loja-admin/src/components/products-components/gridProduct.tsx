@@ -1,7 +1,8 @@
 import { Product } from "@/lib/actions/definitions";
 import Image from "next/image";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import UpdateProductButton from "./updateProductModal";
+import DeleteProductButton from "./deleteProductButton";
+import UpdateProductButton from "./updateProductButton";
 
 export default function GridProduct({ products }: { products: Product[] }) {
   if (!products || products.length === 0) {
@@ -9,9 +10,9 @@ export default function GridProduct({ products }: { products: Product[] }) {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 auto-rows-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {products.map((product: Product) => (
-        <Card key={product.vendorId} className="overflow-hidden">
+        <Card key={product.vendorId} className="overflow-hidden w-full max-w-[310px] mx-auto">
           {' '}
           <CardHeader className="p-0">
             <div className="relative h-48 w-full">
@@ -32,13 +33,10 @@ export default function GridProduct({ products }: { products: Product[] }) {
             <CardTitle className="mb-1 text-lg just">{product.productName}</CardTitle>
             <CardDescription className="text-base font-semibold text-primary justify-between flex items-center">
               R$ {Number(product.price).toFixed(2).replace('.', ',')}
-              <UpdateProductButton />
+              <DeleteProductButton />
+              <UpdateProductButton {} />
             </CardDescription>
           </CardContent>
-          {/* <CardFooter className="p-4 pt-0"> */}
-          {/* Adicione botões de ação aqui se necessário (ex: Editar, Ver Detalhes) */}
-          {/* <Button variant="outline" size="sm">Editar</Button> */}
-          {/* </CardFooter> */}
         </Card>
       ))}
     </div>
