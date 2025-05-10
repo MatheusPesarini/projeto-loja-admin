@@ -16,7 +16,7 @@ import { useActionState, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { submitUpdateProduct } from '@/lib/actions/product/patch-product';
 import { Product } from '@/lib/actions/definitions';
-import { getProductId } from '@/lib/actions/product/get-product-id';
+import { useRouter } from 'next/navigation';
 
 const initialState = {
   success: false,
@@ -24,30 +24,27 @@ const initialState = {
   errors: {},
 };
 
-export default function UpdateProductButton({ productId }: { productId: string }) {
+export default function UpdateProductButton({ product }: {
+  product: Product;
+}) {
   const [open, setOpen] = useState(false);
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const [state, formAction, isPending] = useActionState(
     submitUpdateProduct,
     initialState,
   );
 
+
   useEffect(() => {
-    if (open && productId) {
-      setLoading(true);
-      getProductId(productId)
-        .then((response) => {
-          if (response.success && response.products && response.products.length > 0) {
-            setProduct(response.products[0]);
-          }
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+    if (state?.success) {
+      setOpen(false);
+      setTimeout(() => {
+        router.refresh();
+      }, 300);
     }
-  }, [open, productId]);
+  }, [state?.success, router]);
+
 
   const productNameErrors = state?.errors?.productName;
   const brandErrors = state?.errors?.brand;
@@ -61,7 +58,7 @@ export default function UpdateProductButton({ productId }: { productId: string }
   const formErrors = state?.errors?._form;
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded cursor-pointer size-sm">
           Editar
@@ -76,6 +73,7 @@ export default function UpdateProductButton({ productId }: { productId: string }
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
+            <input type="hidden" name="productId" value={product.productName} />
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="productName" className="text-right">
                 Nome
@@ -286,7 +284,6 @@ export default function UpdateProductButton({ productId }: { productId: string }
                 id="image"
                 type="file"
                 name="image"
-                required
                 aria-describedby="image-error"
                 className={cn(
                   'text-black bg-amber-50 w-full p-2 col-span-3 rounded border',

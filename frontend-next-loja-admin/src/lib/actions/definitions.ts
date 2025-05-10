@@ -46,6 +46,7 @@ export const RegisterFormSchema = z.object({
 });
 
 export const ProductFormSchema = z.object({
+	oldProductId: z.string().optional(),
 	productName: z.string().min(1, {
 		message: 'Por favor digite o nome do produto.',
 	}).max(50, {
@@ -94,6 +95,10 @@ export const ProductFormSchema = z.object({
 
 export const ImageSchema = z.object({
 	image: z.string(),
+});
+
+export const DeleteFormSchema = z.object({
+	productName: z.string(),
 });
 
 export const FileSchema = z
@@ -153,6 +158,15 @@ export type ProductFormState = {
 	success: boolean;
 	products?: Product[];
 };
+
+export type DeleteFormState = {
+	errors?: {
+		productName?: string[];
+		_form?: string[];
+	};
+	message?: string;
+	success: boolean;
+}
 
 export type SessionPayload = {
 	vendorId: string;

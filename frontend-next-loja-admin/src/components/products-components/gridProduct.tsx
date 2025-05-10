@@ -33,8 +33,8 @@ export default function GridProduct({ products }: { products: Product[] }) {
             <CardTitle className="mb-1 text-lg just">{product.productName}</CardTitle>
             <CardDescription className="text-base font-semibold text-primary justify-between flex items-center">
               R$ {Number(product.price).toFixed(2).replace('.', ',')}
-              <DeleteProductButton />
-              <UpdateProductButton {} />
+              <DeleteProductButton productName={product.productName} />
+              <UpdateProductButton product={product} />
             </CardDescription>
           </CardContent>
         </Card>

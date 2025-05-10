@@ -13,9 +13,10 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useActionState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { submitProduct } from '@/lib/actions/product/post-product';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 const initialState = {
 	success: false,
@@ -24,10 +25,22 @@ const initialState = {
 };
 
 export default function CreateProductButton() {
+	const [open, setOpen] = useState(false);
+	const router = useRouter();
+
 	const [state, formAction, isPending] = useActionState(
 		submitProduct,
 		initialState,
 	);
+
+	useEffect(() => {
+		if (state?.success) {
+			setOpen(false);
+			setTimeout(() => {
+				router.refresh();
+			}, 300);
+		}
+	}, [state?.success, router]);
 
 	const productNameErrors = state?.errors?.productName;
 	const brandErrors = state?.errors?.brand;
@@ -41,15 +54,14 @@ export default function CreateProductButton() {
 	const formErrors = state?.errors?._form;
 
 	return (
-		<Dialog>
+		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
 				<Button
 					className="absolute right-10 bottom-10 btn btn-primary w-20 h-20 rounded-full cursor-pointer"
 					size={'icon'}
 					variant="default"
-					asChild
 				>
-					Editar
+					<Plus className='size-10' />
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">

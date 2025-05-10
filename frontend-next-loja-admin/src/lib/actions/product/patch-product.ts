@@ -8,17 +8,19 @@ export async function submitUpdateProduct(
   data: FormData,
 ): Promise<ProductFormState> {
   const vendorId = await getVendorId();
+  const currentImageUrl = data.get('currentImageUrl')?.toString();
 
   if (!vendorId) {
     return {
       errors: { _form: ['Erro ao obter o ID do vendedor.'] },
-      message: 'Erro de validação. Verifique os campos destacados.', 
+      message: 'Erro de validação. Verifique os campos destacados.',
       success: false,
     };
   }
   // console.log('ID do vendedor:', vendorId);
 
   const validatedFields = ProductFormSchema.safeParse({
+    oldProductId: data.get('productId'),
     productName: data.get('productName'),
     brand: data.get('brand'),
     model: data.get('model'),
@@ -30,8 +32,6 @@ export async function submitUpdateProduct(
     vendorId: vendorId,
   });
 
-  const imageFile = data.get('image');
-  const validatedImage = FileSchema.safeParse(imageFile);
 
   if (!validatedFields.success) {
     console.log('Erro: Falha na validação dos campos.', validatedFields.error.flatten());
@@ -41,47 +41,56 @@ export async function submitUpdateProduct(
       success: false,
     };
   }
-  if (!validatedImage.success) {
-    console.log('Erro: Falha na validação da imagem.', validatedImage.error.flatten());
-    return {
-      errors: { image: validatedImage.error.flatten().formErrors },
-      message: 'Erro de validação. Verifique os campos destacados.',
-      success: false,
-    };
-  }
 
-  console.log('Validações passaram. Tentando upload da imagem...');
+  let imageUrl = currentImageUrl || null;
+  let newImageUploaded = false;
 
-  let imageUrl = '';
-  try {
-    console.log('Tentando fazer upload da imagem...');
-    const imageFormData = new FormData();
-    imageFormData.append('image', validatedImage.data);
+  const imageFile = data.get('image') as File;
 
-    const imageUploadResponse = await fetch('http://localhost:4000/upload', {
-      method: 'POST',
-      body: imageFormData,
-    });
+  if (imageFile && imageFile.size > 0) {
+    const validatedImage = FileSchema.safeParse(imageFile);
+    if (!validatedImage.success) {
+      console.log('Erro: Falha na validação da imagem.', validatedImage.error.flatten());
+      return {
+        errors: { image: validatedImage.error.flatten().formErrors },
+        message: 'Erro de validação. Verifique os campos destacados.',
+        success: false,
+      };
+    }
 
-    if (!imageUploadResponse.ok) {
+    console.log('Tentando upload da nova imagem...');
+
+    try {
+      const imageFormData = new FormData();
+      imageFormData.append('image', validatedImage.data);
+
+      const imageUploadResponse = await fetch('http://localhost:4000/upload', {
+        method: 'POST',
+        body: imageFormData,
+      });
+
+      if (!imageUploadResponse.ok) {
+        return {
+          errors: { image: ['Erro ao fazer upload da imagem.'] },
+          message: 'Erro de validação. Verifique os campos destacados.',
+          success: false,
+        };
+      }
+
+      console.log('Upload da nova imagem concluído.');
+      const imageResult = await imageUploadResponse.json();
+      imageUrl = imageResult.imageUrl;
+      newImageUploaded = true;
+    } catch (error: unknown) {
+      console.error('Erro no upload da imagem:', error);
       return {
         errors: { image: ['Erro ao fazer upload da imagem.'] },
         message: 'Erro de validação. Verifique os campos destacados.',
         success: false,
       };
     }
-
-    console.log('Upload da imagem concluído. Tentando criar produto...');
-
-    const imageResult = await imageUploadResponse.json();
-    imageUrl = imageResult.imageUrl;
-  } catch (error: unknown) {
-    console.error('Erro no upload da imagem:', error);
-    return {
-      errors: { image: ['Erro ao fazer upload da imagem.'] },
-      message: 'Erro de validação. Verifique os campos destacados.',
-      success: false,
-    };
+  } else {
+    console.log('Nenhuma nova imagem enviada, mantendo a atual:', imageUrl);
   }
 
   try {
@@ -91,8 +100,9 @@ export async function submitUpdateProduct(
       vendorId: vendorId,
     };
 
-    const productResponse = await fetch('http://localhost:3001/product', {
-      method: 'POST',
+    console.log(`Enviando PATCH para http://localhost:3001/product/${vendorId}`);
+    const productResponse = await fetch(`http://localhost:3001/product/${vendorId}`, {
+      method: 'PATCH',
       cache: 'no-cache',
       headers: {
         'Content-Type': 'application/json',
@@ -103,23 +113,30 @@ export async function submitUpdateProduct(
     const productResult = await productResponse.json();
 
     if (!productResponse.ok) {
-      const deletedImage = fetch('http://localhost:4000/delete-image', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ imageUrl }),
-      });
+      if (newImageUploaded && imageUrl) {
+        try {
+          console.log('Deletando imagem após erro na atualização do produto');
+          const deletedImage = await fetch('http://localhost:4000/delete-image', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ imageUrl }),
+          });
 
-      if (!(await deletedImage).ok) {
-        console.error('Erro ao deletar a imagem');
-      } else {
-        console.log('Imagem deletada com sucesso.');
+          if (!deletedImage.ok) {
+            console.error('Erro ao deletar a imagem');
+          } else {
+            console.log('Imagem deletada com sucesso.');
+          }
+        } catch (deleteError) {
+          console.error('Erro ao deletar imagem:', deleteError);
+        }
       }
 
       return {
-        errors: { _form: [productResult.message] },
-        message: 'Erro ao criar o produto. Tente novamente.',
+        errors: { _form: [productResult.message || 'Erro desconhecido'] },
+        message: 'Erro ao atualizar o produto. Tente novamente.',
         success: false,
       };
     }
@@ -132,18 +149,25 @@ export async function submitUpdateProduct(
   } catch (error) {
     console.error('Erro ao criar o produto:', error);
 
-    const deletedImage = fetch('http://localhost:4000/delete-image', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ imageUrl }),
-    });
+    if (newImageUploaded && imageUrl) {
+      try {
+        console.log('Deletando imagem após erro na atualização do produto');
+        const deletedImage = await fetch('http://localhost:4000/delete-image', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ imageUrl }),
+        });
 
-    if (!(await deletedImage).ok) {
-      console.error('Erro ao deletar a imagem');
-    } else {
-      console.log('Imagem deletada com sucesso.');
+        if (!deletedImage.ok) {
+          console.error('Erro ao deletar a imagem');
+        } else {
+          console.log('Imagem deletada com sucesso.');
+        }
+      } catch (deleteError) {
+        console.error('Erro ao deletar imagem:', deleteError);
+      }
     }
 
     return {

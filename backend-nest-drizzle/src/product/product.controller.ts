@@ -1,23 +1,36 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
 } from "@nestjs/common";
 import { ProductService } from "./product.service";
-import { createProductRequest } from "./dto/product.request";
+import {
+  createProductRequest,
+  deleteProductRequest,
+  editProductRequest,
+} from "./dto/product.request";
 
 @Controller("product")
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @Get("/edit/:productId")
-  async getProduct(@Param("productId", ParseUUIDPipe) productId: string) {
-    return this.productService.getProduct(productId);
+  @Delete(":vendorId")
+  @HttpCode(HttpStatus.OK)
+  async deleteVendorProduct(@Body() vendorProductData: deleteProductRequest) {
+    return this.productService.deleteVendorProduct(vendorProductData);
+  }
+
+  @Patch(":vendorId")
+  @HttpCode(HttpStatus.OK)
+  async getProduct(@Body() vendorProductData: editProductRequest) {
+    return this.productService.editVendorProduct(vendorProductData);
   }
 
   @Get(":vendorId")

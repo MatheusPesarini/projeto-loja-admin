@@ -17,10 +17,10 @@ import {
 	SidebarMenuItem,
 } from '../ui/sidebar';
 
-import LogoutButton from './logout-button';
-import { ThemeToggle } from './theme-switch-button';
-import { NavSecondary } from './nav-secondary';
-import { NavMain } from './nav-main';
+import LogoutButton from './logoutButton';
+import { ThemeToggle } from './themeSwitchButton';
+import { NavSecondary } from './navSecondary';
+import { NavMain } from './navMain';
 import Link from 'next/link';
 
 const data = {

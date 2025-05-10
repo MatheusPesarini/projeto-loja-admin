@@ -13,7 +13,6 @@ export default async function Dashboard() {
 		const result = await getProduct();
 		products = result?.products || [];
 	} catch (error) {
-		error = 'Erro ao obter produtos.';
 		console.error('Erro ao obter produtos:', error);
 	}
 

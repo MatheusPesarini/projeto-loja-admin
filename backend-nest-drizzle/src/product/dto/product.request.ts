@@ -4,8 +4,8 @@ import {
   IsOptional,
   IsString,
   IsUUID,
-  Length, 
-  Max, 
+  Length,
+  Max,
   Min,
 } from "class-validator";
 
@@ -45,14 +45,14 @@ export class createProductRequest {
   @IsNumber({}, { message: "O desconto deve ser um número." })
   @Min(0, { message: "O desconto deve ser maior ou igual a 0." })
   @Max(100, { message: "O desconto deve ser menor ou igual a 100." })
-  discount?: number; 
+  discount?: number;
 
-  @IsNotEmpty({ message: "ID do vendedor é obrigatório." }) 
+  @IsNotEmpty({ message: "ID do vendedor é obrigatório." })
   @IsUUID("4", { message: "ID do vendedor inválido." })
-  vendorId: string; 
+  vendorId: string;
 
   @IsNotEmpty({ message: "A quantidade não pode estar vazia." })
-  @IsNumber({}, { message: "A quantidade deve ser um número." }) 
+  @IsNumber({}, { message: "A quantidade deve ser um número." })
   @Min(1, { message: "A quantidade deve ser maior que 0." })
   @Max(999999, { message: "A quantidade deve ser menor que 999999." })
   quantity: number;
@@ -64,6 +64,80 @@ export class createProductRequest {
   })
   description: string;
 
-  @IsString() 
+  @IsString()
   image?: string;
+}
+
+export class editProductRequest {
+  @IsString()
+  oldProductId: string;
+
+  @IsOptional()
+  @IsString()
+  @Length(1, 50, {
+    message: "O nome do produto deve ter entre 1 e 50 caracteres.",
+  })
+  productName: string;
+
+  @IsOptional()
+  @IsString()
+  @Length(1, 20, {
+    message: "A marca do produto deve ter entre 1 e 20 caracteres.",
+  })
+  brand: string;
+
+  @IsOptional()
+  @IsString()
+  @Length(1, 20, {
+    message: "O modelo do produto deve ter entre 1 e 20 caracteres.",
+  })
+  model: string;
+
+  @IsOptional()
+  @IsString()
+  category: string;
+
+  @IsOptional()
+  @IsNumber({}, { message: "O preço deve ser um número." })
+  @Min(0.01, { message: "O preço deve ser maior que 0." })
+  @Max(999999, { message: "O preço deve ser menor que 999999." })
+  price: number;
+
+  @IsOptional()
+  @IsNumber({}, { message: "O desconto deve ser um número." })
+  @Min(0, { message: "O desconto deve ser maior ou igual a 0." })
+  @Max(100, { message: "O desconto deve ser menor ou igual a 100." })
+  discount?: number;
+
+  @IsOptional()
+  @IsUUID("4", { message: "ID do vendedor inválido." })
+  vendorId: string;
+
+  @IsOptional()
+  @IsNumber({}, { message: "A quantidade deve ser um número." })
+  @Min(1, { message: "A quantidade deve ser maior que 0." })
+  @Max(999999, { message: "A quantidade deve ser menor que 999999." })
+  quantity: number;
+
+  @IsOptional()
+  @IsString()
+  @Length(1, 500, {
+    message: "A descrição do produto deve ter entre 1 e 500 caracteres.",
+  })
+  description: string;
+
+  @IsOptional()
+  @IsString()
+  image?: string;
+}
+
+export class deleteProductRequest {
+  @IsString()
+  @Length(1, 50, {
+    message: "O nome do produto deve ter entre 1 e 50 caracteres.",
+  })
+  productName: string;
+
+  @IsUUID("4", { message: "ID do vendedor inválido." })
+  vendorId: string;
 }
