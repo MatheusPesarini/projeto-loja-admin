@@ -26,7 +26,7 @@ export async function submitUpdateProduct(
     model: data.get('model'),
     category: data.get('category'),
     quantity: data.get('quantity'),
-    price: data.get('price'),
+    originalPrice: data.get('originalPrice'),
     discount: data.get('discount'),
     description: data.get('description'),
     vendorId: vendorId,
@@ -94,8 +94,20 @@ export async function submitUpdateProduct(
   }
 
   try {
+    let discountedPrice = validatedFields.data.originalPrice;
+
+    if (validatedFields.data.discount !== 0 && validatedFields.data.discount !== undefined) {
+      discountedPrice = parseFloat(
+        (
+          (validatedFields.data.originalPrice as number) *
+          (1 - (validatedFields.data.discount as number) / 100)
+        ).toFixed(2)
+      );
+    }
+
     const validatedFieldsWithImage = {
       ...validatedFields.data,
+      discountedPrice, 
       image: imageUrl,
       vendorId: vendorId,
     };

@@ -50,7 +50,7 @@ export default function UpdateProductButton({ product }: {
   const brandErrors = state?.errors?.brand;
   const modelErrors = state?.errors?.model;
   const categoryErrors = state?.errors?.category;
-  const priceErrors = state?.errors?.price;
+  const priceErrors = state?.errors?.originalPrice;
   const discountErrors = state?.errors?.discount;
   const quantityErrors = state?.errors?.quantity;
   const descriptionErrors = state?.errors?.description;
@@ -179,7 +179,7 @@ export default function UpdateProductButton({ product }: {
                 type="text"
                 name="price"
                 required
-                defaultValue={product?.price || ''}
+                defaultValue={product?.originalPrice || ''}
                 min={0}
                 aria-invalid={priceErrors ? 'true' : 'false'}
                 aria-describedby="price-error"
@@ -195,6 +195,23 @@ export default function UpdateProductButton({ product }: {
                   </p>
                 ))}
               </div>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="discountedPrice" className="text-right">
+                Preço com desconto
+              </Label>
+              <Input
+                id="discountedPrice"
+                type="text"
+                name="discountedPrice"
+                readOnly
+                disabled
+                defaultValue={product?.discountedPrice || product?.originalPrice || ''}
+                className={cn(
+                  'text-black bg-gray-100 w-full p-2 rounded border cursor-not-allowed',
+                  'border-gray-300'
+                )}
+              />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="discount" className="text-right">

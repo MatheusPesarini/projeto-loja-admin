@@ -63,20 +63,27 @@ export const ProductFormSchema = z.object({
 		message: 'O modelo do produto deve ter no máximo 50 caracteres.',
 	}).trim(),
 	category: z.string(),
-	price: z.coerce.number().min(0, {
+	originalPrice: z.coerce.number().min(0, {
 		message: 'O preço deve ser maior que 0.',
 	}).max(999999, {
 		message: 'O preço deve ser menor que 999999.',
 	}).refine((value) => value > 0, {
 		message: 'O preço deve ser maior que 0.',
 	}),
+	discountedPrice: z.coerce.number().min(0, {
+		message: 'O preço com desconto deve ser maior que 0.',
+	}).max(999999, {
+		message: 'O preço com desconto deve ser menor que 999999.',
+	}).refine((value) => value > 0, {
+		message: 'O preço com desconto deve ser maior que 0.',
+	}).optional(),
 	discount: z.coerce.number().min(0, {
 		message: 'O desconto deve ser maior ou igual a 0.',
 	}).max(100, {
 		message: 'O desconto deve ser menor ou igual a 100.',
 	}).refine((value) => value >= 0, {
 		message: 'O desconto deve ser maior ou igual a 0.',
-	}),
+	}).default(0),
 	quantity: z.coerce.number().min(0, {
 		message: 'A quantidade deve ser maior que 0.',
 	}).max(999999, {
@@ -148,7 +155,8 @@ export type ProductFormState = {
 		model?: string[];
 		category?: string[];
 		quantity?: string[];
-		price?: string[];
+		originalPrice?: string[];
+		discountedPrice?: string[];
 		discount?: string[];
 		description?: string[];
 		image?: string[];

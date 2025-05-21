@@ -43,11 +43,18 @@ export const order = pgTable("Order", {
 		}).onUpdate("cascade").onDelete("restrict"),
 ]);
 
+export const size = pgTable("Size", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	name: text().notNull(),
+}, (table) => [
+	unique("Size_name_unique").on(table.name),
+]);
+
 export const product = pgTable("Product", {
 	id: uuid().defaultRandom().primaryKey().notNull(),
 	productName: text().notNull(),
 	category: text().notNull(),
-	price: numeric({ precision: 10, scale:  2 }).notNull(),
+	originalPrice: numeric({ precision: 10, scale:  2 }).notNull(),
 	quantity: integer().notNull(),
 	description: text().notNull(),
 	image: text().notNull(),
@@ -57,19 +64,13 @@ export const product = pgTable("Product", {
 	discount: numeric({ precision: 5, scale:  2 }),
 	brand: text().notNull(),
 	model: text().notNull(),
+	discountedPrice: numeric({ precision: 10, scale:  2 }),
 }, (table) => [
 	foreignKey({
 			columns: [table.vendorId],
 			foreignColumns: [vendor.id],
 			name: "Product_vendorId_Vendor_id_fk"
 		}).onUpdate("cascade").onDelete("set null"),
-]);
-
-export const size = pgTable("Size", {
-	id: uuid().defaultRandom().primaryKey().notNull(),
-	name: text().notNull(),
-}, (table) => [
-	unique("Size_name_unique").on(table.name),
 ]);
 
 export const productSize = pgTable("ProductSize", {

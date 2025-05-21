@@ -39,7 +39,13 @@ export class createProductRequest {
   @IsNumber({}, { message: "O preço deve ser um número." })
   @Min(0.01, { message: "O preço deve ser maior que 0." })
   @Max(999999, { message: "O preço deve ser menor que 999999." })
-  price: number;
+  originalPrice: number;
+
+  @IsNotEmpty({ message: "O preço não pode estar vazio." })
+  @IsNumber({}, { message: "O preço deve ser um número." })
+  @Min(0.01, { message: "O preço deve ser maior que 0." })
+  @Max(999999, { message: "O preço deve ser menor que 999999." })
+  discountedPrice: number;
 
   @IsOptional()
   @IsNumber({}, { message: "O desconto deve ser um número." })
@@ -101,7 +107,13 @@ export class editProductRequest {
   @IsNumber({}, { message: "O preço deve ser um número." })
   @Min(0.01, { message: "O preço deve ser maior que 0." })
   @Max(999999, { message: "O preço deve ser menor que 999999." })
-  price: number;
+  originalPrice: number;
+
+  @IsOptional()
+  @IsNumber({}, { message: "O preço deve ser um número." })
+  @Min(0.01, { message: "O preço deve ser maior que 0." })
+  @Max(999999, { message: "O preço deve ser menor que 999999." })
+  discountedPrice: number;
 
   @IsOptional()
   @IsNumber({}, { message: "O desconto deve ser um número." })

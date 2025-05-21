@@ -106,7 +106,11 @@ export class ProductService {
       brand: productDataDto.brand,
       model: productDataDto.model,
       category: productDataDto.category,
-      price: String(productDataDto.price),
+      originalPrice: String(productDataDto.originalPrice),
+      discountedPrice:
+        productDataDto.discountedPrice !== undefined
+          ? String(productDataDto.discountedPrice)
+          : product.discountedPrice,
       discount:
         productDataDto.discount !== undefined
           ? String(productDataDto.discount)
@@ -165,7 +169,11 @@ export class ProductService {
       brand: productDataDto.brand,
       model: productDataDto.model,
       category: productDataDto.category,
-      price: String(productDataDto.price),
+      originalPrice: String(productDataDto.originalPrice),
+      discountedPrice:
+        productDataDto.discountedPrice !== undefined
+          ? String(productDataDto.discountedPrice)
+          : null,
       discount:
         productDataDto.discount !== undefined
           ? String(productDataDto.discount)

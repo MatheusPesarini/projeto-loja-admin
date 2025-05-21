@@ -1,7 +1,7 @@
 'use server';
 
 import { getVendorId } from '@/lib/session/get-vendor-id';
-import { DeleteFormState, DeleteFormSchema } from '../definitions';
+import { type DeleteFormState, DeleteFormSchema } from '../definitions';
 
 export async function submitDeleteProduct(
   prevState: DeleteFormState | undefined,

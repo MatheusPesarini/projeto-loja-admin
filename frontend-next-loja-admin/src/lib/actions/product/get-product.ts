@@ -27,7 +27,7 @@ export async function getProduct(): Promise<ProductFormState> {
         productsResponse.status,
         productsResponse.statusText,
       );
-      let errorDetails = await productsResponse.text(); 
+      let errorDetails = await productsResponse.text();
       console.error('Detalhes do erro:', errorDetails);
 
       return {
@@ -47,7 +47,7 @@ export async function getProduct(): Promise<ProductFormState> {
 
     const products: Product[] = Array.isArray(productsResult)
       ? productsResult
-      : productsResult.data || []; 
+      : productsResult.data || [];
 
     return {
       message: 'Produtos obtidos com sucesso.', // Ou use productsResult.message se a API retornar uma

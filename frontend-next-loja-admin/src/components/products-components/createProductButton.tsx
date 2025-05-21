@@ -25,6 +25,9 @@ const initialState = {
 };
 
 export default function CreateProductButton() {
+	const [originalPrice, setOriginalPrice] = useState<number>(0);
+	const [discount, setDiscount] = useState<number>(0);
+	const [finalPrice, setFinalPrice] = useState<number>(0);
 	const [open, setOpen] = useState(false);
 	const router = useRouter();
 
@@ -42,11 +45,22 @@ export default function CreateProductButton() {
 		}
 	}, [state?.success, router]);
 
+	useEffect(() => {
+		if (originalPrice > 0 && discount >= 0 && discount <= 100) {
+			const calculatedPrice = parseFloat(
+				(originalPrice * (1 - discount / 100)).toFixed(2)
+			);
+			setFinalPrice(calculatedPrice);
+		} else {
+			setFinalPrice(originalPrice);
+		}
+	}, [originalPrice, discount]);
+
 	const productNameErrors = state?.errors?.productName;
 	const brandErrors = state?.errors?.brand;
 	const modelErrors = state?.errors?.model;
 	const categoryErrors = state?.errors?.category;
-	const priceErrors = state?.errors?.price;
+	const priceErrors = state?.errors?.originalPrice;
 	const discountErrors = state?.errors?.discount;
 	const quantityErrors = state?.errors?.quantity;
 	const descriptionErrors = state?.errors?.description;
@@ -166,15 +180,16 @@ export default function CreateProductButton() {
 							</div>
 						</div>
 						<div className="grid grid-cols-4 items-center gap-4">
-							<Label htmlFor="price" className="text-right">
+							<Label htmlFor="originalPrice" className="text-right">
 								Preço
 							</Label>
 							<Input
-								id="price"
+								id="originalPrice"
 								type="text"
-								name="price"
+								name="originalPrice"
 								required
 								min={0}
+								onChange={(e) => setOriginalPrice(parseFloat(e.target.value) || 0)}
 								aria-invalid={priceErrors ? 'true' : 'false'}
 								aria-describedby="price-error"
 								className={cn(
@@ -204,6 +219,7 @@ export default function CreateProductButton() {
 									min={0}
 									max={100}
 									step="0.01"
+									onChange={(e) => setDiscount(parseFloat(e.target.value) || 0)}
 									aria-invalid={discountErrors ? 'true' : 'false'}
 									aria-describedby="discount-error"
 									className={cn(
@@ -220,6 +236,24 @@ export default function CreateProductButton() {
 									</p>
 								))}
 							</div>
+						</div>
+						<div className="grid grid-cols-4 items-center gap-4">
+							<Label htmlFor="discountedPrice" className="text-right">
+								Preço com desconto
+							</Label>
+							<Input
+								id="discountedPrice"
+								type="text"
+								name="discountedPrice"
+								readOnly
+								disabled
+								value={finalPrice > 0 ? `R$ ${finalPrice.toFixed(2)}` : '0'}
+								defaultValue={'0'}
+								className={cn(
+									'text-black bg-gray-100 w-full p-2 rounded border cursor-not-allowed',
+									'border-gray-300'
+								)}
+							/>
 						</div>
 						<div className="grid grid-cols-4 items-center gap-4">
 							<Label htmlFor="quantity" className="text-right">
