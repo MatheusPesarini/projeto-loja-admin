@@ -17,12 +17,18 @@ import { useActionState, useEffect, useState } from 'react';
 import { submitProduct } from '@/lib/actions/product/post-product';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 const initialState = {
 	success: false,
 	message: '',
 	errors: {},
 };
+
+const productCategories = [
+	{ value: 'camisetas', label: 'Camisetas' },
+	{ value: 'calças', label: 'Calças' },
+];
 
 export default function CreateProductButton() {
 	const [originalPrice, setOriginalPrice] = useState<number>(0);
@@ -160,18 +166,26 @@ export default function CreateProductButton() {
 							<Label htmlFor="category" className="text-right">
 								Categoria
 							</Label>
-							<Input
-								id="category"
-								type="text"
-								name="category"
-								required
-								aria-describedby="category-error"
-								className={cn(
-									'text-black bg-amber-50 w-full p-2 col-span-3 rounded border',
-									categoryErrors ? 'border-red-500' : 'border-gray-300',
-								)}
-							/>
-							<div id="category-error" aria-live="polite" aria-atomic="true">
+							<Select name="category" required>
+								<SelectTrigger
+									id="category"
+									aria-describedby="category-error"
+									className={cn(
+										'text-black bg-amber-50 w-full p-2 col-span-3 rounded border',
+										categoryErrors ? 'border-red-500' : 'border-gray-300',
+									)}
+								>
+									<SelectValue placeholder="Selecione uma categoria" />
+								</SelectTrigger>
+								<SelectContent>
+									{productCategories.map((category) => (
+										<SelectItem key={category.value} value={category.value}>
+											{category.label}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+							<div id="category-error" aria-live="polite" aria-atomic="true" className="col-start-2 col-span-3">
 								{categoryErrors?.map((error: string) => (
 									<p className="mt-1 text-sm text-red-500" key={error}>
 										{error}

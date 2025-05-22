@@ -4,6 +4,7 @@ import {
 	ArrowUpCircleIcon,
 	HelpCircleIcon,
 	LayoutDashboard,
+	PackagePlus,
 	PackageSearch,
 } from 'lucide-react';
 
@@ -30,18 +31,20 @@ const data = {
 			url: '/dashboard',
 			icon: LayoutDashboard,
 		},
+	],
+	products: [
 		{
 			name: 'Produtos',
 			url: '/dashboard/products',
 			icon: PackageSearch,
 		},
+		{
+			name: 'Criar Produto',
+			url: '/dashboard/products',
+			icon: PackagePlus,
+		},
 	],
 	navSecondary: [
-		// {
-		//   title: "Settings",
-		//   url: "#",
-		//   icon: SettingsIcon,
-		// },
 		{
 			title: 'Get Help',
 			url: '/dashboard/help',
@@ -58,20 +61,12 @@ export default function SideBar({
 			<SidebarHeader>
 				<SidebarMenu>
 					<SidebarMenuItem>
-						<SidebarMenuButton
-							asChild
-							className="data-[slot=sidebar-menu-button]:!p-1.5"
-						>
-							<Link href="#">
-								<ArrowUpCircleIcon className="h-5 w-5" />
-								<span className="text-base font-semibold">Nome Empresa</span>
-							</Link>
-						</SidebarMenuButton>
+						<span className="text-base font-semibold">Admin</span>
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarHeader>
 			<SidebarContent>
-				<NavMain items={data.navMain} />
+				<NavMain mainItems={data.navMain} productItems={data.products} />
 				{/* <NavDocuments items={data.documents} /> */}
 				<NavSecondary items={data.navSecondary} className="mt-auto" />
 			</SidebarContent>

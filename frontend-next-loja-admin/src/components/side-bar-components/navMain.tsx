@@ -23,22 +23,26 @@ import {
 	useSidebar,
 } from '@/components/ui/sidebar';
 
+type NavItem = {
+	name: string;
+	url: string;
+	icon: LucideIcon;
+}
+
 export function NavMain({
-	items,
+	mainItems,
+	productItems
 }: {
-	items: {
-		name: string;
-		url: string;
-		icon: LucideIcon;
-	}[];
+	mainItems: NavItem[];
+	productItems: NavItem[];
 }) {
 	const { isMobile } = useSidebar();
 
 	return (
 		<SidebarGroup className="group-data-[collapsible=icon]:hidden">
-			<SidebarGroupLabel>Documents</SidebarGroupLabel>
+			<SidebarGroupLabel>Dados</SidebarGroupLabel>
 			<SidebarMenu>
-				{items.map((item) => (
+				{mainItems.map((item) => (
 					<SidebarMenuItem key={item.name}>
 						<SidebarMenuButton asChild>
 							<a href={item.url}>
@@ -46,14 +50,14 @@ export function NavMain({
 								<span>{item.name}</span>
 							</a>
 						</SidebarMenuButton>
-						<DropdownMenu>
+						{/* <DropdownMenu>
 							<DropdownMenuTrigger asChild>
 								<SidebarMenuAction
 									showOnHover
 									className="rounded-sm data-[state=open]:bg-accent"
 								>
 									<MoreHorizontalIcon />
-									<span className="sr-only">More</span>
+									<span className="sr-only">Mais</span>
 								</SidebarMenuAction>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent
@@ -63,22 +67,32 @@ export function NavMain({
 							>
 								<DropdownMenuItem>
 									<FolderIcon />
-									<span>Open</span>
+									<span>Abrir</span>
 								</DropdownMenuItem>
 								<DropdownMenuItem>
 									<ShareIcon />
-									<span>Share</span>
+									<span>Compartilhar</span>
 								</DropdownMenuItem>
 							</DropdownMenuContent>
-						</DropdownMenu>
+						</DropdownMenu> */}
 					</SidebarMenuItem>
 				))}
-				<SidebarMenuItem>
+				<SidebarGroupLabel>Produtos</SidebarGroupLabel>
+				{productItems.map((item) => (
+					<SidebarMenuItem key={item.name}>
+						<SidebarMenuButton asChild>
+							<a href={item.url}>
+								<item.icon />
+								<span>{item.name}</span>
+							</a>
+						</SidebarMenuButton>
+					</SidebarMenuItem>
+				))}
+				{/* <SidebarMenuItem>
 					<SidebarMenuButton className="text-sidebar-foreground/70">
-						<MoreHorizontalIcon className="text-sidebar-foreground/70" />
-						<span>More</span>
+						<span>Produtos</span>
 					</SidebarMenuButton>
-				</SidebarMenuItem>
+				</SidebarMenuItem> */}
 			</SidebarMenu>
 		</SidebarGroup>
 	);
