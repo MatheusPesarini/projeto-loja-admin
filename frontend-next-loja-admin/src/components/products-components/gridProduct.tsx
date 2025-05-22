@@ -1,4 +1,4 @@
-import { Product } from "@/lib/actions/definitions";
+import type { Product } from "@/lib/actions/definitions";
 import Image from "next/image";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import DeleteProductButton from "./deleteProductButton";

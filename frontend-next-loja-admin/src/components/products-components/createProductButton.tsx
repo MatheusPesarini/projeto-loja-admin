@@ -238,7 +238,7 @@ export default function CreateProductButton() {
 							</div>
 						</div>
 						<div className="grid grid-cols-4 items-center gap-4">
-							<Label htmlFor="discountedPrice" className="text-right">
+							<Label htmlFor="discountedPrice">
 								Preço com desconto
 							</Label>
 							<Input
@@ -250,12 +250,12 @@ export default function CreateProductButton() {
 								value={finalPrice > 0 ? `R$ ${finalPrice.toFixed(2)}` : '0'}
 								defaultValue={'0'}
 								className={cn(
-									'text-black bg-gray-100 w-full p-2 rounded border cursor-not-allowed',
+									'text-black bg-amber-50 w-full p-2 col-span-3 rounded border cursor-not-allowed',
 									'border-gray-300'
 								)}
 							/>
 						</div>
-						<div className="grid grid-cols-4 items-center gap-4">
+						<div className="grid grid-cols-4 items-center gap-4 mt-4">
 							<Label htmlFor="quantity" className="text-right">
 								Quantidade
 							</Label>

@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label';
 import { useActionState, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { submitUpdateProduct } from '@/lib/actions/product/patch-product';
-import { Product } from '@/lib/actions/definitions';
+import type { Product } from '@/lib/actions/definitions';
 import { useRouter } from 'next/navigation';
 
 const initialState = {
@@ -23,6 +23,11 @@ const initialState = {
   message: '',
   errors: {},
 };
+
+const productCategories = [
+  { value: 'camisetas', label: 'Camisetas' },
+  { value: 'calças', label: 'Calças' },
+];
 
 export default function UpdateProductButton({ product }: {
   product: Product;
@@ -197,23 +202,6 @@ export default function UpdateProductButton({ product }: {
               </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="discountedPrice" className="text-right">
-                Preço com desconto
-              </Label>
-              <Input
-                id="discountedPrice"
-                type="text"
-                name="discountedPrice"
-                readOnly
-                disabled
-                defaultValue={product?.discountedPrice || product?.originalPrice || ''}
-                className={cn(
-                  'text-black bg-gray-100 w-full p-2 rounded border cursor-not-allowed',
-                  'border-gray-300'
-                )}
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="discount" className="text-right">
                 Desconto
               </Label>
@@ -245,6 +233,23 @@ export default function UpdateProductButton({ product }: {
               </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="discountedPrice">
+                Preço com desconto
+              </Label>
+              <Input
+                id="discountedPrice"
+                type="text"
+                name="discountedPrice"
+                readOnly
+                disabled
+                defaultValue={product?.discountedPrice || product?.originalPrice || ''}
+                className={cn(
+                  'text-black bg-amber-50 w-full p-2 col-span-3 rounded border cursor-not-allowed',
+                  'border-gray-300'
+                )}
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4 mt-4">
               <Label htmlFor="quantity" className="text-right">
                 Quantidade
               </Label>
