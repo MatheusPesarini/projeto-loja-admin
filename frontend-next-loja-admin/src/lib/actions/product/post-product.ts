@@ -1,7 +1,11 @@
 'use server';
 
 import { getVendorId } from '@/lib/session/get-vendor-id';
-import { FileSchema, ProductFormState, ProductFormSchema } from '../definitions';
+import {
+	FileSchema,
+	ProductFormState,
+	ProductFormSchema,
+} from '../definitions';
 
 export async function submitProduct(
 	prevState: ProductFormState | undefined,
@@ -23,6 +27,9 @@ export async function submitProduct(
 		brand: data.get('brand'),
 		model: data.get('model'),
 		category: data.get('category'),
+		genre: data.get('genre'),
+		warranty: data.get('warranty'),
+		weight: data.get('weight'),
 		quantity: data.get('quantity'),
 		originalPrice: data.get('originalPrice'),
 		discount: data.get('discount'),
@@ -34,7 +41,10 @@ export async function submitProduct(
 	const validatedImage = FileSchema.safeParse(imageFile);
 
 	if (!validatedFields.success) {
-		console.log('Erro: Falha na validação dos campos.', validatedFields.error.flatten());
+		console.log(
+			'Erro: Falha na validação dos campos.',
+			validatedFields.error.flatten(),
+		);
 		return {
 			errors: validatedFields.error.flatten().fieldErrors,
 			message: 'Erro de validação. Verifique os campos destacados.',
@@ -42,7 +52,10 @@ export async function submitProduct(
 		};
 	}
 	if (!validatedImage.success) {
-		console.log('Erro: Falha na validação da imagem.', validatedImage.error.flatten());
+		console.log(
+			'Erro: Falha na validação da imagem.',
+			validatedImage.error.flatten(),
+		);
 		return {
 			errors: { image: validatedImage.error.flatten().formErrors },
 			message: 'Erro de validação. Verifique os campos destacados.',
@@ -86,7 +99,10 @@ export async function submitProduct(
 
 	try {
 		let discountedPrice = 0;
-		if (validatedFields.data.discount !== 0 && validatedFields.data.discount !== undefined) {
+		if (
+			validatedFields.data.discount !== 0 &&
+			validatedFields.data.discount !== undefined
+		) {
 			discountedPrice = parseFloat(
 				(
 					(validatedFields.data.originalPrice as number) *

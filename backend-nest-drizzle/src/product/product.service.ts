@@ -106,6 +106,9 @@ export class ProductService {
       brand: productDataDto.brand,
       model: productDataDto.model,
       category: productDataDto.category,
+      genre: productDataDto.genre,
+      warranty: productDataDto.warranty,
+      weight: productDataDto.weight,
       originalPrice: String(productDataDto.originalPrice),
       discountedPrice:
         productDataDto.discountedPrice !== undefined
@@ -169,6 +172,9 @@ export class ProductService {
       brand: productDataDto.brand,
       model: productDataDto.model,
       category: productDataDto.category,
+      genre: productDataDto.genre,
+      warranty: productDataDto.warranty,
+      weight: productDataDto.weight,
       originalPrice: String(productDataDto.originalPrice),
       discountedPrice:
         productDataDto.discountedPrice !== undefined

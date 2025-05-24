@@ -1,5 +1,18 @@
 import { relations } from "drizzle-orm/relations";
-import { user, order, product, vendor, productSize, size } from "./schema";
+import { vendor, product, user, order, productSize, size } from "./schema";
+
+export const productRelations = relations(product, ({one, many}) => ({
+	vendor: one(vendor, {
+		fields: [product.vendorId],
+		references: [vendor.id]
+	}),
+	orders: many(order),
+	productSizes: many(productSize),
+}));
+
+export const vendorRelations = relations(vendor, ({many}) => ({
+	products: many(product),
+}));
 
 export const orderRelations = relations(order, ({one}) => ({
 	user: one(user, {
@@ -14,19 +27,6 @@ export const orderRelations = relations(order, ({one}) => ({
 
 export const userRelations = relations(user, ({many}) => ({
 	orders: many(order),
-}));
-
-export const productRelations = relations(product, ({one, many}) => ({
-	orders: many(order),
-	vendor: one(vendor, {
-		fields: [product.vendorId],
-		references: [vendor.id]
-	}),
-	productSizes: many(productSize),
-}));
-
-export const vendorRelations = relations(vendor, ({many}) => ({
-	products: many(product),
 }));
 
 export const productSizeRelations = relations(productSize, ({one}) => ({

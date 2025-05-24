@@ -1,37 +1,26 @@
 'use client';
 
-import {
-	FolderIcon,
-	MoreHorizontalIcon,
-	ShareIcon,
-	type LucideIcon,
-} from 'lucide-react';
+import { type LucideIcon } from 'lucide-react';
 
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from '@/components/ui/dropdownMenu';
 import {
 	SidebarGroup,
 	SidebarGroupLabel,
 	SidebarMenu,
-	SidebarMenuAction,
 	SidebarMenuButton,
 	SidebarMenuItem,
 	useSidebar,
 } from '@/components/ui/sidebar';
+import Link from 'next/link';
 
 type NavItem = {
 	name: string;
 	url: string;
 	icon: LucideIcon;
-}
+};
 
 export function NavMain({
 	mainItems,
-	productItems
+	productItems,
 }: {
 	mainItems: NavItem[];
 	productItems: NavItem[];
@@ -45,10 +34,10 @@ export function NavMain({
 				{mainItems.map((item) => (
 					<SidebarMenuItem key={item.name}>
 						<SidebarMenuButton asChild>
-							<a href={item.url}>
+							<Link href={item.url}>
 								<item.icon />
 								<span>{item.name}</span>
-							</a>
+							</Link>
 						</SidebarMenuButton>
 						{/* <DropdownMenu>
 							<DropdownMenuTrigger asChild>
@@ -81,10 +70,10 @@ export function NavMain({
 				{productItems.map((item) => (
 					<SidebarMenuItem key={item.name}>
 						<SidebarMenuButton asChild>
-							<a href={item.url}>
+							<Link href={item.url}>
 								<item.icon />
 								<span>{item.name}</span>
-							</a>
+							</Link>
 						</SidebarMenuButton>
 					</SidebarMenuItem>
 				))}

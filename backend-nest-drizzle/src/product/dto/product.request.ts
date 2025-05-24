@@ -35,6 +35,18 @@ export class createProductRequest {
   @IsString()
   category: string;
 
+  @IsNotEmpty({ message: "Por favor selecione o genêro." })
+  @IsString()
+  genre: string;
+
+  @IsNotEmpty({ message: "Por favor digite a garantia do vendedor." })
+  @IsString()
+  warranty: string;
+
+  @IsNotEmpty({ message: "Por favor digite o peso." })
+  @IsString()
+  weight: string;
+
   @IsNotEmpty({ message: "O preço não pode estar vazio." })
   @IsNumber({}, { message: "O preço deve ser um número." })
   @Min(0.01, { message: "O preço deve ser maior que 0." })
@@ -102,6 +114,18 @@ export class editProductRequest {
   @IsOptional()
   @IsString()
   category: string;
+
+  @IsNotEmpty({ message: "Por favor selecione o genêro." })
+  @IsString()
+  genre: string;
+
+  @IsNotEmpty({ message: "Por favor digite a garantia do vendedor." })
+  @IsString()
+  warranty: string;
+
+  @IsNotEmpty({ message: "Por favor digite o peso." })
+  @IsString()
+  weight: string;
 
   @IsOptional()
   @IsNumber({}, { message: "O preço deve ser um número." })

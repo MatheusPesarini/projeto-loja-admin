@@ -22,7 +22,6 @@ import LogoutButton from './logoutButton';
 import { ThemeToggle } from './themeSwitchButton';
 import { NavSecondary } from './navSecondary';
 import { NavMain } from './navMain';
-import Link from 'next/link';
 
 const data = {
 	navMain: [
@@ -40,7 +39,7 @@ const data = {
 		},
 		{
 			name: 'Criar Produto',
-			url: '/dashboard/products',
+			url: '/dashboard/products/create',
 			icon: PackagePlus,
 		},
 	],

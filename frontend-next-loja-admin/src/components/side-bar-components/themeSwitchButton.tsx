@@ -14,9 +14,15 @@ export function ThemeToggle() {
 	}, []);
 
 	if (!mounted) {
-		return <Button size="icon" disabled className="w-auto p-0 cursor-pointer" aria-label="Alternar tema" />;
+		return (
+			<Button
+				size="icon"
+				disabled
+				className="w-auto p-0 cursor-pointer"
+				aria-label="Alternar tema"
+			/>
+		);
 	}
-
 
 	return (
 		<Button
