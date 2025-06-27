@@ -17,9 +17,9 @@ export default function GridProduct({ products }: { products: Product[] }) {
 
 	return (
 		<div className="grid grid-cols-1 gap-4 auto-rows-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-			{products.map((product: Product) => (
+			{products.map((product: Product, index: number) => (
 				<Card
-					key={product.vendorId}
+					key={`product-${product.productName}-${product.brand}-${product.model}-${index}`}
 					className="overflow-hidden w-full max-w-[310px] mx-auto"
 				>
 					{' '}
@@ -31,8 +31,8 @@ export default function GridProduct({ products }: { products: Product[] }) {
 								alt={product.productName}
 								fill
 								className="rounded-t-lg object-cover" // Adicione object-cover aqui
-								// Opcional: adicione tratamento de erro ou placeholder enquanto carrega
-								// onError={(e) => e.currentTarget.src = '/placeholder-image.png'}
+							// Opcional: adicione tratamento de erro ou placeholder enquanto carrega
+							// onError={(e) => e.currentTarget.src = '/placeholder-image.png'}
 							/>
 						</div>
 					</CardHeader>

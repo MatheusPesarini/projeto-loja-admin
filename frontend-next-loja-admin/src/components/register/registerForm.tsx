@@ -107,8 +107,8 @@ export default function RegisterForm({
 							/>
 							<div id="company-error" aria-live="polite" aria-atomic="true">
 								{companyErrors &&
-									companyErrors.map((error: string) => (
-										<p className="mt-1 text-sm text-red-500" key={error}>
+									companyErrors.map((error: string, index: number) => (
+										<p className="mt-1 text-sm text-red-500" key={`company-error-${index}`}>
 											{error}
 										</p>
 									))}
@@ -133,8 +133,8 @@ export default function RegisterForm({
 							/>
 							<div id="cnpj-error" aria-live="polite" aria-atomic="true">
 								{cnpjErrors &&
-									cnpjErrors.map((error: string) => (
-										<p className="mt-1 text-sm text-red-500" key={error}>
+									cnpjErrors.map((error: string, index: number) => (
+										<p className="mt-1 text-sm text-red-500" key={`cnpj-error-${index}`}>
 											{error}
 										</p>
 									))}
@@ -156,8 +156,8 @@ export default function RegisterForm({
 							/>
 							<div id="email-error" aria-live="polite" aria-atomic="true">
 								{emailErrors &&
-									emailErrors.map((error: string) => (
-										<p className="mt-1 text-sm text-red-500" key={error}>
+									emailErrors.map((error: string, index: number) => (
+										<p className="mt-1 text-sm text-red-500" key={`email-error-${index}`}>
 											{error}
 										</p>
 									))}
@@ -178,8 +178,8 @@ export default function RegisterForm({
 							/>
 							<div id="password-error" aria-live="polite" aria-atomic="true">
 								{passwordErrors &&
-									passwordErrors.map((error: string) => (
-										<p className="mt-1 text-sm text-red-500" key={error}>
+									passwordErrors.map((error: string, index: number) => (
+										<p className="mt-1 text-sm text-red-500" key={`password-error-${index}`}>
 											{error}
 										</p>
 									))}
@@ -190,7 +190,7 @@ export default function RegisterForm({
 								className="mt-2 text-sm text-red-500 text-center"
 								aria-live="polite"
 							>
-								{formErrors.map((error: string) => (
+								{formErrors.map((error: string, index: number) => (
 									<p key={error}>{error}</p>
 								))}
 							</div>

@@ -141,8 +141,8 @@ export default function UpdateProductButton({ product }: { product: Product }) {
 										className={cn(productNameErrors && 'border-red-500')}
 									/>
 									<div id="productName-error" aria-live="polite" aria-atomic="true">
-										{productNameErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{productNameErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`productName-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -160,8 +160,8 @@ export default function UpdateProductButton({ product }: { product: Product }) {
 										className={cn(brandErrors && 'border-red-500')}
 									/>
 									<div id="brand-error" aria-live="polite" aria-atomic="true">
-										{brandErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{brandErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`brand-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -179,8 +179,8 @@ export default function UpdateProductButton({ product }: { product: Product }) {
 										className={cn(modelErrors && 'border-red-500')}
 									/>
 									<div id="model-error" aria-live="polite" aria-atomic="true">
-										{modelErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{modelErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`model-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -198,8 +198,8 @@ export default function UpdateProductButton({ product }: { product: Product }) {
 										className={cn(warrantyErrors && 'border-red-500')}
 									/>
 									<div id="warranty-error" aria-live="polite" aria-atomic="true">
-										{warrantyErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{warrantyErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`warranty-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -214,7 +214,7 @@ export default function UpdateProductButton({ product }: { product: Product }) {
 										value={selectedGenre}
 										onValueChange={(value) => {
 											setSelectedGenre(value);
-											setSelectedCategory(''); 
+											setSelectedCategory('');
 										}}
 									>
 										<SelectTrigger
@@ -233,8 +233,8 @@ export default function UpdateProductButton({ product }: { product: Product }) {
 										</SelectContent>
 									</Select>
 									<div id="genre-error" aria-live="polite" aria-atomic="true">
-										{genreErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{genreErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`genre-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -272,8 +272,8 @@ export default function UpdateProductButton({ product }: { product: Product }) {
 										</SelectContent>
 									</Select>
 									<div id="category-error" aria-live="polite" aria-atomic="true">
-										{categoryErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{categoryErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`category-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -284,7 +284,6 @@ export default function UpdateProductButton({ product }: { product: Product }) {
 
 						<Separator />
 
-						{/* Preços e Estoque */}
 						<div className="space-y-4">
 							<h3 className="text-lg font-medium">Preços e Estoque</h3>
 							<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -295,7 +294,7 @@ export default function UpdateProductButton({ product }: { product: Product }) {
 										type="number"
 										name="originalPrice"
 										required
-										min={0}
+										min={0.01}
 										step="0.01"
 										defaultValue={product?.originalPrice || ''}
 										onChange={(e) =>
@@ -305,8 +304,8 @@ export default function UpdateProductButton({ product }: { product: Product }) {
 										className={cn(priceErrors && 'border-red-500')}
 									/>
 									<div id="price-error" aria-live="polite" aria-atomic="true">
-										{priceErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{priceErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`price-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -323,7 +322,7 @@ export default function UpdateProductButton({ product }: { product: Product }) {
 										min={0}
 										max={100}
 										step="0.01"
-										defaultValue={product?.discount || ''}
+										defaultValue={product?.discount || 0}
 										onChange={(e) =>
 											setDiscount(parseFloat(e.target.value) || 0)
 										}
@@ -331,8 +330,8 @@ export default function UpdateProductButton({ product }: { product: Product }) {
 										className={cn(discountErrors && 'border-red-500')}
 									/>
 									<div id="discount-error" aria-live="polite" aria-atomic="true">
-										{discountErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{discountErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`discount-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -343,7 +342,7 @@ export default function UpdateProductButton({ product }: { product: Product }) {
 									<Label htmlFor="discountedPrice">Preço Final</Label>
 									<Input
 										id="discountedPrice"
-										type="text"
+										type="number"
 										name="discountedPrice"
 										readOnly
 										value={
@@ -366,8 +365,8 @@ export default function UpdateProductButton({ product }: { product: Product }) {
 										className={cn(quantityErrors && 'border-red-500')}
 									/>
 									<div id="quantity-error" aria-live="polite" aria-atomic="true">
-										{quantityErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{quantityErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`quantity-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -381,14 +380,14 @@ export default function UpdateProductButton({ product }: { product: Product }) {
 										type="number"
 										name="weight"
 										required
-										min={0.1}
+										min={0.01}
 										defaultValue={product?.weight || ''}
 										aria-describedby="weight-error"
 										className={cn(weightErrors && 'border-red-500')}
 									/>
 									<div id="weight-error" aria-live="polite" aria-atomic="true">
-										{weightErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{weightErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`weight-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -399,7 +398,6 @@ export default function UpdateProductButton({ product }: { product: Product }) {
 
 						<Separator />
 
-						{/* Detalhes do Produto */}
 						<div className="space-y-4">
 							<h3 className="text-lg font-medium">Detalhes do Produto</h3>
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -415,8 +413,8 @@ export default function UpdateProductButton({ product }: { product: Product }) {
 										className={cn(descriptionErrors && 'border-red-500')}
 									/>
 									<div id="description-error" aria-live="polite" aria-atomic="true">
-										{descriptionErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{descriptionErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`description-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -434,8 +432,8 @@ export default function UpdateProductButton({ product }: { product: Product }) {
 										className={cn(imageErrors && 'border-red-500')}
 									/>
 									<div id="image-error" aria-live="polite" aria-atomic="true">
-										{imageErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{imageErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`image-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -445,8 +443,8 @@ export default function UpdateProductButton({ product }: { product: Product }) {
 						</div>
 
 						<div id="form-error" aria-live="polite" aria-atomic="true">
-							{formErrors?.map((error: string) => (
-								<p className="text-sm text-red-500" key={error}>
+							{formErrors?.map((error: string, index: number) => (
+								<p className="mt-1 text-sm text-red-500" key={`form-error-${index}`}>
 									{error}
 								</p>
 							))}

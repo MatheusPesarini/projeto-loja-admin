@@ -99,14 +99,12 @@ export async function submitProduct(
 
 	try {
 		let discountedPrice = 0;
-		if (
-			validatedFields.data.discount !== 0 &&
-			validatedFields.data.discount !== undefined
-		) {
+		
+		if (validatedFields.data.discount > 0) {
 			discountedPrice = parseFloat(
 				(
-					(validatedFields.data.originalPrice as number) *
-					(1 - (validatedFields.data.discount as number) / 100)
+					validatedFields.data.originalPrice *
+					(1 - validatedFields.data.discount / 100)
 				).toFixed(2),
 			);
 		}

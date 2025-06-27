@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useActionState, useEffect, useState } from 'react';
+import { useActionState, useEffect, useRef, useState } from 'react';
 import { submitProduct } from '@/lib/actions/product/post-product';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
@@ -28,8 +28,12 @@ import {
 	initialState,
 	productCategoriesByGenre,
 } from './utils/product-definition';
+import { toast } from 'sonner';
 
 export default function CreateProductForm() {
+	const router = useRouter();
+	const formRef = useRef<HTMLFormElement>(null);
+
 	const [originalPrice, setOriginalPrice] = useState<number>(0);
 	const [discount, setDiscount] = useState<number>(0);
 	const [finalPrice, setFinalPrice] = useState<number>(0);
@@ -45,14 +49,28 @@ export default function CreateProductForm() {
 	>([]);
 	const [selectedCategory, setSelectedCategory] = useState<string>('');
 
+	const resetForm = () => {
+		formRef.current?.reset();
+		setOriginalPrice(0);
+		setDiscount(0);
+		setFinalPrice(0);
+		setSelectedGenre('');
+		setSelectedCategory('');
+		setAvailableCategories([]);
+	};
+
 	useEffect(() => {
-		if (originalPrice > 0 && discount >= 0 && discount <= 100) {
-			const calculatedPrice = parseFloat(
-				(originalPrice * (1 - discount / 100)).toFixed(2),
-			);
-			setFinalPrice(calculatedPrice);
+		if (originalPrice > 0) {
+			if (discount >= 0 && discount <= 100) {
+				const calculatedPrice = parseFloat(
+					(originalPrice * (1 - discount / 100)).toFixed(2),
+				);
+				setFinalPrice(calculatedPrice);
+			} else {
+				setFinalPrice(originalPrice);
+			}
 		} else {
-			setFinalPrice(originalPrice);
+			setFinalPrice(0);
 		}
 	}, [originalPrice, discount]);
 
@@ -60,10 +78,34 @@ export default function CreateProductForm() {
 		if (selectedGenre && productCategoriesByGenre[selectedGenre]) {
 			setAvailableCategories(productCategoriesByGenre[selectedGenre]);
 		} else {
-			setAvailableCategories([]); // Limpa as categorias se nenhum gênero for selecionado
+			setAvailableCategories([]);
 		}
-		setSelectedCategory(''); // Reseta a categoria selecionada ao mudar o gênero
+		setSelectedCategory('');
 	}, [selectedGenre]);
+
+	useEffect(() => {
+		if (state?.success) {
+			toast.success('Produto criado com sucesso!', {
+				description: 'O produto foi adicionado ao catálogo.',
+				duration: 4000,
+			});
+
+			resetForm();
+
+			setTimeout(() => {
+				router.refresh();
+			}, 500);
+		}
+	}, [state?.success, router]);
+
+	useEffect(() => {
+		if (state?.errors?._form && !state?.success) {
+			toast.error('Erro ao criar produto', {
+				description: 'Verifique os campos e tente novamente.',
+				duration: 4000,
+			});
+		}
+	}, [state?.errors?._form, state?.success]);
 
 	const productNameErrors = state?.errors?.productName;
 	const brandErrors = state?.errors?.brand;
@@ -82,7 +124,7 @@ export default function CreateProductForm() {
 	return (
 		<div className="container mx-auto py-6 px-4 max-w-4xl">
 			<Card>
-				<form action={formAction}>
+				<form action={formAction} ref={formRef}>
 					<CardHeader>
 						<CardTitle className="text-2xl">Adicionar Produto</CardTitle>
 					</CardHeader>
@@ -106,8 +148,8 @@ export default function CreateProductForm() {
 										aria-live="polite"
 										aria-atomic="true"
 									>
-										{productNameErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{productNameErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`productName-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -125,8 +167,8 @@ export default function CreateProductForm() {
 										className={cn(brandErrors && 'border-red-500')}
 									/>
 									<div id="brand-error" aria-live="polite" aria-atomic="true">
-										{brandErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{brandErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`brand-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -144,8 +186,8 @@ export default function CreateProductForm() {
 										className={cn(modelErrors && 'border-red-500')}
 									/>
 									<div id="model-error" aria-live="polite" aria-atomic="true">
-										{modelErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{modelErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`model-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -166,7 +208,7 @@ export default function CreateProductForm() {
 											id="genre"
 											aria-describedby="genre-error"
 											className={cn(
-												categoryErrors && 'border-red-500',
+												genreErrors && 'border-red-500',
 												'w-full',
 											)}
 										>
@@ -181,8 +223,8 @@ export default function CreateProductForm() {
 										</SelectContent>
 									</Select>
 									<div id="genre-error" aria-live="polite" aria-atomic="true">
-										{genreErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{genreErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`genre-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -229,8 +271,8 @@ export default function CreateProductForm() {
 										aria-live="polite"
 										aria-atomic="true"
 									>
-										{categoryErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{categoryErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`category-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -242,18 +284,19 @@ export default function CreateProductForm() {
 									<Input
 										id="warranty"
 										name="warranty"
+										type='number'
 										placeholder="Digite a garantia em dias"
 										required
 										aria-describedby="warranty-error"
-										className={cn(modelErrors && 'border-red-500')}
+										className={cn(warrantyErrors && 'border-red-500')}
 									/>
 									<div
 										id="warranty-error"
 										aria-live="polite"
 										aria-atomic="true"
 									>
-										{warrantyErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{warrantyErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`warranty-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -273,10 +316,11 @@ export default function CreateProductForm() {
 										id="originalPrice"
 										type="number"
 										name="originalPrice"
-										placeholder="0,00"
+										placeholder="0.00"
 										required
-										min={0}
-										step="0.01"
+										min={0.01}
+										step={0.01}
+										value={originalPrice || ''}
 										onChange={(e) =>
 											setOriginalPrice(parseFloat(e.target.value) || 0)
 										}
@@ -284,8 +328,8 @@ export default function CreateProductForm() {
 										className={cn(priceErrors && 'border-red-500')}
 									/>
 									<div id="price-error" aria-live="polite" aria-atomic="true">
-										{priceErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{priceErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`price-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -299,13 +343,14 @@ export default function CreateProductForm() {
 										type="number"
 										name="discount"
 										placeholder="0"
-										required
 										min={0}
 										max={100}
-										step="0.01"
-										onChange={(e) =>
-											setDiscount(parseFloat(e.target.value) || 0)
-										}
+										step={0.01}
+										value={discount || 0}
+										onChange={(e) => {
+											const value = parseFloat(e.target.value) || 0;
+											setDiscount(value);
+										}}
 										aria-describedby="discount-error"
 										className={cn(discountErrors && 'border-red-500')}
 									/>
@@ -314,8 +359,8 @@ export default function CreateProductForm() {
 										aria-live="polite"
 										aria-atomic="true"
 									>
-										{discountErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{discountErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`discount-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -330,7 +375,7 @@ export default function CreateProductForm() {
 										name="discountedPrice"
 										readOnly
 										value={
-											finalPrice > 0 ? `R$ ${finalPrice.toFixed(2)}` : 'R$ 0,00'
+											finalPrice > 0 ? `R$ ${finalPrice.toFixed(2)}` : 'R$ 0.00'
 										}
 										className="bg-muted cursor-not-allowed"
 									/>
@@ -353,8 +398,8 @@ export default function CreateProductForm() {
 										aria-live="polite"
 										aria-atomic="true"
 									>
-										{quantityErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{quantityErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`quantity-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -367,15 +412,16 @@ export default function CreateProductForm() {
 										id="weight"
 										type="number"
 										name="weight"
-										placeholder="0"
+										placeholder="0.1"
 										required
-										min={0.1}
+										step={0.01}
+										min={0.01}
 										aria-describedby="weight-error"
 										className={cn(weightErrors && 'border-red-500')}
 									/>
 									<div id="weight-error" aria-live="polite" aria-atomic="true">
-										{weightErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{weightErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`weight-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -405,8 +451,8 @@ export default function CreateProductForm() {
 										aria-live="polite"
 										aria-atomic="true"
 									>
-										{descriptionErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{descriptionErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`description-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -425,8 +471,8 @@ export default function CreateProductForm() {
 										className={cn(imageErrors && 'border-red-500')}
 									/>
 									<div id="image-error" aria-live="polite" aria-atomic="true">
-										{imageErrors?.map((error: string) => (
-											<p className="text-sm text-red-500" key={error}>
+										{imageErrors?.map((error: string, index: number) => (
+											<p className="mt-1 text-sm text-red-500" key={`image-error-${index}`}>
 												{error}
 											</p>
 										))}
@@ -436,8 +482,8 @@ export default function CreateProductForm() {
 						</div>
 
 						<div id="form-error" aria-live="polite" aria-atomic="true">
-							{formErrors?.map((error: string) => (
-								<p className="text-sm text-red-500" key={error}>
+							{formErrors?.map((error: string, index: number) => (
+								<p className="mt-1 text-sm text-red-500" key={`form-error-${index}`}>
 									{error}
 								</p>
 							))}

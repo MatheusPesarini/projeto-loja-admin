@@ -62,7 +62,7 @@ export const ProductFormSchema = z.object({
 			message: 'Por favor digite a marca do produto.',
 		})
 		.max(20, {
-			message: 'A marca do produto deve ter no máximo 50 caracteres.',
+			message: 'A marca do produto deve ter no máximo 20 caracteres.',
 		})
 		.trim(),
 	model: z
@@ -71,44 +71,43 @@ export const ProductFormSchema = z.object({
 			message: 'Por favor digite o modelo do produto.',
 		})
 		.max(20, {
-			message: 'O modelo do produto deve ter no máximo 50 caracteres.',
+			message: 'O modelo do produto deve ter no máximo 20 caracteres.',
 		})
 		.trim(),
 	category: z.string(),
 	genre: z.string(),
-	warranty: z
-		.string()
-		.min(1, {
-			message: 'Por favor digite a garantia do produto em dias.',
-		})
-		.trim(),
-	weight: z
-		.string()
-		.min(0.1, {
-			message: 'Por favor digite o peso do produto.',
-		})
-		.trim(),
-	originalPrice: z.coerce
+	warranty: z.coerce
 		.number()
 		.min(0, {
+			message: 'A garantia deve ser maior ou igual a 0.',
+		})
+		.max(36500, {
+			message: 'A garantia deve ser menor que 36500 dias.',
+		})
+		.default(0),
+	weight: z.coerce
+		.number()
+		.min(0.01, {
+			message: 'O peso deve ser maior que 0.01 kg.',
+		})
+		.max(9999, {
+			message: 'O peso deve ser menor que 9999 kg.',
+		}),
+	originalPrice: z.coerce
+		.number()
+		.min(0.01, {
 			message: 'O preço deve ser maior que 0.',
 		})
 		.max(999999, {
 			message: 'O preço deve ser menor que 999999.',
-		})
-		.refine((value) => value > 0, {
-			message: 'O preço deve ser maior que 0.',
 		}),
 	discountedPrice: z.coerce
 		.number()
 		.min(0, {
-			message: 'O preço com desconto deve ser maior que 0.',
+			message: 'O preço com desconto deve ser maior ou igual a 0.',
 		})
 		.max(999999, {
 			message: 'O preço com desconto deve ser menor que 999999.',
-		})
-		.refine((value) => value > 0, {
-			message: 'O preço com desconto deve ser maior que 0.',
 		})
 		.optional(),
 	discount: z.coerce
@@ -119,21 +118,16 @@ export const ProductFormSchema = z.object({
 		.max(100, {
 			message: 'O desconto deve ser menor ou igual a 100.',
 		})
-		.refine((value) => value >= 0, {
-			message: 'O desconto deve ser maior ou igual a 0.',
-		})
 		.default(0),
 	quantity: z.coerce
 		.number()
 		.min(0, {
-			message: 'A quantidade deve ser maior que 0.',
+			message: 'A quantidade deve ser maior ou igual a 0.',
 		})
 		.max(999999, {
 			message: 'A quantidade deve ser menor que 999999.',
 		})
-		.refine((value) => value > 0, {
-			message: 'A quantidade deve ser maior que 0.',
-		}),
+		.default(0),
 	description: z
 		.string()
 		.min(1, {
